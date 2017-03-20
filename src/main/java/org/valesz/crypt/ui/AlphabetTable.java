@@ -5,7 +5,7 @@ import org.valesz.crypt.core.Cryptor;
 import javax.swing.*;
 
 /**
- * A simple graphical component for creating a table
+ * A simple graphical component for creating an alphabet translation table
  *
  * Created by Zdenek Vales on 19.3.2017.
  */

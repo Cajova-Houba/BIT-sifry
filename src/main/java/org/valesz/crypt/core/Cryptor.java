@@ -1,5 +1,7 @@
 package org.valesz.crypt.core;
 
+import org.valesz.crypt.ui.AlphabetTable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,15 +22,51 @@ public class Cryptor {
     public static final int LAST_LETTER = (int)'z';
 
     /**
-     * Performs a frequency analysis (standard latin alphabet) and returns array containing frequencies of letters.
+     * Performs a frequency analysis with All method.
      * @param message Message.
-     * @return Arrays of frequencies. Never null, length is Cryptor.ALPHABET_LEN.
+     * @return Frequency analysis result.
      */
     public static FrequencyAnalysisResult[] frequencyAnalysis(String message) {
+        return frequencyAnalysis(message, FrequencyAnalysisMethod.All);
+    }
+
+    /**
+     * Performs a frequency analysis (standard latin alphabet) and returns array containing frequencies of letters.
+     * @param message Message.
+     * @param method Method to be used for frequencyAnalysis.
+     * @return Arrays of frequencies. Never null, length is Cryptor.ALPHABET_LEN.
+     */
+    public static FrequencyAnalysisResult[] frequencyAnalysis(String message, FrequencyAnalysisMethod method) {
         FrequencyAnalysisResult[] res = FrequencyAnalysisResult.prepareForStandardAlphabet();
 
-        for(int i = 0; i < message.length(); i++) {
-            char c = Character.toLowerCase(message.charAt(i));
+        String text = "";
+        StringBuilder textBuilder = new StringBuilder();
+
+        switch (method) {
+            case All:
+                text = message;
+                break;
+            case EvenChars:
+                for(int i = 0; i < message.length(); i++) {
+                    if((i+1) % 2 == 0) {
+                        textBuilder.append(message.charAt(i));
+                    }
+                }
+                text = textBuilder.toString();
+                break;
+
+            case OddChars:
+                for (int i = 0; i < message.length(); i++) {
+                    if((i+1) % 2 ==1) {
+                        textBuilder.append(message.charAt(i));
+                    }
+                }
+                text = textBuilder.toString();
+                break;
+        }
+
+        for(int i = 0; i < text.length(); i++) {
+            char c = Character.toLowerCase(text.charAt(i));
 
             if (c >= FIRST_LETTER && c <= LAST_LETTER) {
                 res[c - FIRST_LETTER].incAbsoluteCount();
@@ -36,7 +74,7 @@ public class Cryptor {
         }
 
         for(FrequencyAnalysisResult r : res) {
-            r.recountRelativeCount(message.length());
+            r.recountRelativeCount(text.length());
         }
 
         return res;
@@ -123,10 +161,14 @@ public class Cryptor {
         int msgLen = message.length();
         StringBuilder res = new StringBuilder();
 
-        logger.log(Level.FINE, "Vigenere, message: "+message+"; key: "+key);
+//        logger.log(Level.FINE, "Vigenere, message: "+message+"; key: "+key);
 
         for(int i = 0; i < msgLen; i++) {
             char origChar = message.charAt(i);
+            if(origChar < FIRST_LETTER || origChar > LAST_LETTER) {
+                res.append(origChar);
+                continue;
+            }
             char keyChar = key.charAt(i % keyLen);
 
             int newCharI = (int)keyChar - FIRST_LETTER;
@@ -136,7 +178,7 @@ public class Cryptor {
 
             char newChar = (char)newCharI;
 
-            logger.log(Level.FINE, String.format("Conversion: %c + %c => %c", origChar, keyChar, newChar));
+//            logger.log(Level.FINE, String.format("Conversion: %c + %c => %c", origChar, keyChar, newChar));
             res.append(newChar);
         }
 
@@ -148,10 +190,14 @@ public class Cryptor {
         int msgLen = message.length();
         StringBuilder res = new StringBuilder();
 
-        logger.log(Level.FINE, "Vigenere, message: "+message+"; key: "+key);
+//        logger.log(Level.FINE, "Vigenere, message: "+message+"; key: "+key);
 
         for(int i = 0; i < msgLen; i++) {
             char encChar = message.charAt(i);
+            if(encChar < FIRST_LETTER || encChar > LAST_LETTER) {
+                res.append(encChar);
+                continue;
+            }
             char keyChar = key.charAt(i % keyLen);
 
             int origCharI = (int)encChar - FIRST_LETTER;
@@ -164,7 +210,7 @@ public class Cryptor {
 
             char origChar = (char)origCharI;
 
-            logger.log(Level.FINE, String.format("Conversion: %c + %c => %c", encChar, keyChar, origChar));
+//            logger.log(Level.FINE, String.format("Conversion: %c + %c => %c", encChar, keyChar, origChar));
             res.append(origChar);
         }
 
@@ -196,7 +242,7 @@ public class Cryptor {
         char[] tmpKey = key.toCharArray();
         Arrays.sort(tmpKey);
         String sortedKey = String.valueOf(tmpKey);
-        logger.log(Level.FINE, String.format("Key: %s, sorted key: %s", key, sortedKey));
+//        logger.log(Level.FINE, String.format("Key: %s, sorted key: %s", key, sortedKey));
         for(int i = 0; i < keyLen; i++) {
             for(int j = 0; j < keyLen; j++) {
                 if( key.charAt(j) == sortedKey.charAt(i) && keyNumbers[j] == -1) {
@@ -206,9 +252,9 @@ public class Cryptor {
             }
         }
 
-        logger.log(Level.FINE, "Key numbers: ");
+//        logger.log(Level.FINE, "Key numbers: ");
         for(int i = 0; i< keyLen; i++) {
-            logger.log(Level.FINE, String.format("%c => %d", key.charAt(i), keyNumbers[i]));
+//            logger.log(Level.FINE, String.format("%c => %d", key.charAt(i), keyNumbers[i]));
         }
 
         // put message to table
@@ -270,7 +316,7 @@ public class Cryptor {
         char[] tmpKey = key.toCharArray();
         Arrays.sort(tmpKey);
         String sortedKey = String.valueOf(tmpKey);
-        logger.log(Level.FINE, String.format("Key: %s, sorted key: %s", key, sortedKey));
+//        logger.log(Level.FINE, String.format("Key: %s, sorted key: %s", key, sortedKey));
         for(int i = 0; i < keyLen; i++) {
             for(int j = 0; j < keyLen; j++) {
                 if( key.charAt(j) == sortedKey.charAt(i) && keyNumbers[j] == -1) {
@@ -280,9 +326,9 @@ public class Cryptor {
             }
         }
 
-        logger.log(Level.FINE, "Key numbers: ");
+//        logger.log(Level.FINE, "Key numbers: ");
         for(int i = 0; i< keyLen; i++) {
-            logger.log(Level.FINE, String.format("%c => %d", key.charAt(i), keyNumbers[i]));
+//            logger.log(Level.FINE, String.format("%c => %d", key.charAt(i), keyNumbers[i]));
         }
 
         // put message to table
@@ -305,9 +351,9 @@ public class Cryptor {
         // print table
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[0].length; j++) {
-                System.out.print(table[i][j]+" ");
+//                System.out.print(table[i][j]+" ");
             }
-            System.out.print("\n");
+//            System.out.print("\n");
         }
 
         // decrypt the message

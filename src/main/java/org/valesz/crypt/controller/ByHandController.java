@@ -1,8 +1,13 @@
 package org.valesz.crypt.controller;
 
 
+import org.valesz.crypt.core.Cryptor;
+import org.valesz.crypt.core.FrequencyAnalysisMethod;
+import org.valesz.crypt.core.FrequencyAnalysisResult;
 import org.valesz.crypt.core.TextUtils;
 import org.valesz.crypt.ui.AlphabetTable;
+import org.valesz.crypt.ui.FaMethodComboBox;
+import org.valesz.crypt.ui.FrequencyAnalysisTable;
 
 import javax.swing.*;
 
@@ -13,11 +18,19 @@ import javax.swing.*;
  */
 public class ByHandController {
 
-    public static final void initialize(JTextArea encryptedMessageTextArea, JTextArea complexViewTextArea, AlphabetTable alphabetTable) {
+    public static final void initialize(JTextArea encryptedMessageTextArea,
+                                        JTextArea complexViewTextArea,
+                                        AlphabetTable alphabetTable,
+                                        FrequencyAnalysisTable frequencyAnalysisTable,
+                                        FaMethodComboBox faMethodComboBox,
+                                        FaMethodComboBox replaceMethodChoice) {
         instance = new ByHandController();
         instance.encryptedMessageTextArea = encryptedMessageTextArea;
         instance.complexViewTextArea = complexViewTextArea;
         instance.alphabetTable = alphabetTable;
+        instance.frequencyAnalysisTable = frequencyAnalysisTable;
+        instance.faMethodComboBox = faMethodComboBox;
+        instance.replaceMethodChoice = replaceMethodChoice;
     }
 
     /**
@@ -39,6 +52,9 @@ public class ByHandController {
     private JTextArea encryptedMessageTextArea;
     private JTextArea complexViewTextArea;
     private AlphabetTable alphabetTable;
+    private FrequencyAnalysisTable frequencyAnalysisTable;
+    private FaMethodComboBox faMethodComboBox;
+    private FaMethodComboBox replaceMethodChoice;
 
     private ByHandController() {
 
@@ -53,6 +69,18 @@ public class ByHandController {
 
         String complexView = TextUtils.getComplexViewText(encryptedMessage, alphabet, complexViewTextArea.getColumns());
         complexViewTextArea.setText(complexView);
+    }
+
+    /**
+     * Performs a frequency analysis on the encrypted message.
+     */
+    public void doFrequencyAnalysis() {
+        String encryptedMessage = encryptedMessageTextArea.getText();
+        FrequencyAnalysisMethod method = (FrequencyAnalysisMethod) faMethodComboBox.getSelectedItem();
+
+        FrequencyAnalysisResult[] result = Cryptor.frequencyAnalysis(encryptedMessage, method);
+
+        frequencyAnalysisTable.setFrequencyAnalysis(result);
     }
 
 }

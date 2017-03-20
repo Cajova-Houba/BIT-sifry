@@ -86,4 +86,41 @@ public class CryptorTest {
             }
         }
     }
+
+    @Test
+    public void testFrequencyAnalysis3() {
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        String text = "ababab";
+        double expectedRelativeCount = 1.0 ;
+        int expectedAbsoluteCount = 3;
+        FrequencyAnalysisResult[] res = Cryptor.frequencyAnalysis(text, FrequencyAnalysisMethod.OddChars);
+        for (int i = 0; i < res.length; i++) {
+            FrequencyAnalysisResult r = res[i];
+            assertNotNull("Null at position "+i+"!", r);
+            assertEquals("Wrong letter!", alphabet.charAt(i), r.getCharacter().charValue());
+            if(r.getCharacter().charValue() == 'a') {
+                assertEquals("Wrong absolute count!", expectedAbsoluteCount, r.getAbsoluteCount());
+                assertEquals("Wrong relative count!", expectedRelativeCount, r.getRelativeCount(), 0.01);
+
+            } else {
+                assertEquals("Wrong absolute count.", 0, r.getAbsoluteCount());
+                assertEquals("Wrong relative count", 0, r.getRelativeCount(), 0.01);
+            }
+        }
+
+        res = Cryptor.frequencyAnalysis(text, FrequencyAnalysisMethod.EvenChars);
+        for (int i = 0; i < res.length; i++) {
+            FrequencyAnalysisResult r = res[i];
+            assertNotNull("Null at position "+i+"!", r);
+            assertEquals("Wrong letter!", alphabet.charAt(i), r.getCharacter().charValue());
+            if(r.getCharacter().charValue() == 'b') {
+                assertEquals("Wrong absolute count!", expectedAbsoluteCount, r.getAbsoluteCount());
+                assertEquals("Wrong relative count!", expectedRelativeCount, r.getRelativeCount(), 0.01);
+
+            } else {
+                assertEquals("Wrong absolute count.", 0, r.getAbsoluteCount());
+                assertEquals("Wrong relative count", 0, r.getRelativeCount(), 0.01);
+            }
+        }
+    }
 }

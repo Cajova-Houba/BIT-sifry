@@ -8,6 +8,17 @@ package org.valesz.crypt.core;
 public class TextUtils {
 
     /**
+     * Returns a complex view for encrypted message with All method.
+     * @param encryptedMessage Encrypted message.
+     * @param alphabet Alphabet
+     * @param charsPerLine Number of characters per one line.
+     * @return Complex view.
+     */
+    public static String getComplexViewText(String encryptedMessage, String[] alphabet, int charsPerLine) {
+        return getComplexViewText(encryptedMessage, alphabet, charsPerLine, FrequencyAnalysisMethod.All);
+    }
+
+    /**
      * Returns a multiline string which will display encrypted and translated message.
      *
      * Example:
@@ -28,9 +39,10 @@ public class TextUtils {
      *                 will be used to translate 'b' letter and so on...
      *                 If some character is not defined, empty string should be used.
      * @param charsPerLine How many characters is on 1 line.
+     * @param replacingMethod Method stating which characters in message to be translated.
      * @return Multiline string.
      */
-    public static String getComplexViewText(String encryptedMessage, String[] alphabet, int charsPerLine) {
+    public static String getComplexViewText(String encryptedMessage, String[] alphabet, int charsPerLine, FrequencyAnalysisMethod replacingMethod) {
         StringBuilder res = new StringBuilder();
 
         // split string into lines
@@ -40,20 +52,40 @@ public class TextUtils {
         }
 
         // for each line of original message, create a line of translated message
+        // charCnt will be counting just chars - so that special symbols don't break even/odd char order
+        int charCnt = 0;
         for(String line : lines) {
             res.append(line).append("\n");
 
             // translate letters and append either new char o space
             for(int i = 0; i < line.length(); i++) {
                 char originalLetter = Character.toLowerCase(line.charAt(i));
-
                 if(originalLetter >= Cryptor.FIRST_LETTER && originalLetter <= Cryptor.LAST_LETTER) {
+                    charCnt++;
                     if(alphabet[originalLetter - Cryptor.FIRST_LETTER].length() == 0) {
                         // no char is defined, append space
                         res.append(" ");
                     } else {
                         // character is defined, append it
-                        res.append(alphabet[originalLetter - Cryptor.FIRST_LETTER]);
+                        switch (replacingMethod) {
+                            case All:
+                                res.append(alphabet[originalLetter - Cryptor.FIRST_LETTER]);
+                                break;
+                            case EvenChars:
+                                if((charCnt) % 2 == 0) {
+                                    res.append(alphabet[originalLetter - Cryptor.FIRST_LETTER]);
+                                } else {
+                                    res.append(" ");
+                                }
+                                break;
+                            case OddChars:
+                                if((charCnt) % 2 == 1) {
+                                    res.append(alphabet[originalLetter - Cryptor.FIRST_LETTER]);
+                                } else {
+                                    res.append(" ");
+                                }
+                                break;
+                        }
                     }
                 } else {
                     // just append other chars
