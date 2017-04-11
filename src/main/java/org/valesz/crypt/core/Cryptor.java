@@ -368,4 +368,14 @@ public class Cryptor {
         return res.toString();
     }
 
+    public static int feistel(int message, int blockLength, int iterations, int key) {
+
+        int left = (message & 0xFFFF0000) >> 16;
+        int right = message & 0x0000FFFF;
+
+
+
+        return 0;
+    }
+
 }
