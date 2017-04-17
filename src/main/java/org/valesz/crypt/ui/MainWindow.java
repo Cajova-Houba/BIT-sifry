@@ -15,7 +15,7 @@ public class MainWindow extends JFrame {
     public static final int HEIGHT = 600;
 
     private JPanel inputPanel;
-    private JPanel toolsPanel;
+    private JTabbedPane toolsPanel;
 
     public MainWindow(){
         super(TITLE);

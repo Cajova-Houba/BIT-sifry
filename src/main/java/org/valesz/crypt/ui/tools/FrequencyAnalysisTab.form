@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="org.valesz.crypt.ui.tools.FrequencyAnalysisTab">
+  <grid id="27dc6" binding="mainPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+    <constraints>
+      <xy x="20" y="20" width="669" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="abfc7" binding="freqAnalPanel" layout-manager="GridBagLayout">
+        <constraints/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="c7ef" class="javax.swing.JComboBox" binding="freqAnalChoose">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="1d65f" class="javax.swing.JTable" binding="freqAnalTable">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="5d050" class="javax.swing.JButton" binding="freqAnalRefresh">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Refresh"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="88a3a" binding="textPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints/>
+        <properties>
+          <enabled value="false"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="f6be5" class="javax.swing.JTextArea" binding="textArea">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <columns value="50"/>
+              <rows value="20"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="3a7b" binding="alphabetPanel" layout-manager="GridBagLayout">
+        <constraints/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="4c25c" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Abeceda"/>
+            </properties>
+          </component>
+          <component id="bb326" class="javax.swing.JTable" binding="alphabetTable">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="3448f" class="javax.swing.JButton" binding="alphabetRefresh">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Button"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

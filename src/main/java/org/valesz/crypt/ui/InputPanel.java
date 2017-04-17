@@ -11,21 +11,19 @@ public class InputPanel extends JPanel {
     private JTextArea encTextArea;
 
     public InputPanel() {
-        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setAlignmentX(LEFT_ALIGNMENT);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         initComponents();
     }
 
     public void initComponents() {
-        JLabel label = new JLabel("Šifrovaný text:");
-        label.setAlignmentX(LEFT_ALIGNMENT);
+        JLabel label = new JLabel("Šifrovaný text:", SwingConstants.LEFT);
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
         add(label);
 
         encTextArea = new JTextArea();
-        encTextArea.setRows(10);
-        encTextArea.setAlignmentX(0f);
+        encTextArea.setRows(2);
         JScrollPane sp = new JScrollPane(encTextArea);
-        sp.setAlignmentX(LEFT_ALIGNMENT);
+//        sp.setAlignmentX(JScrollPane.LEFT_ALIGNMENT);
         add(sp);
     }
 }
