@@ -1,7 +1,7 @@
 package org.valesz.crypt.main;
 
 import org.valesz.crypt.core.BruteforceResult;
-import org.valesz.crypt.core.EncryptionMethod;
+import org.valesz.crypt.core.EncryptionMethodType;
 import org.valesz.crypt.ui.MainWindow;
 
 import javax.swing.*;
@@ -92,7 +92,7 @@ public class App
                             logger.log(Level.INFO, "Waiting for thread "+i+" to finish.");
                             bruteForcers[i].join();
                             for (BruteforceResult res : bruteForcers[i].getResults()) {
-                                if(res.foundWords.size() >= foundWordsLimit && res.encryptionMethod == EncryptionMethod.Vigenere) {
+                                if(res.foundWords.size() >= foundWordsLimit && res.encryptionMethodType == EncryptionMethodType.Vigenere) {
                                     outFileWriter.write(res.toString());
                                 }
                             }
@@ -129,7 +129,7 @@ public class App
                     logger.log(Level.INFO, "Waiting for thread "+i+" to finish.");
                     bruteForcers[i].join();
                     for (BruteforceResult res : bruteForcers[i].getResults()) {
-                        if(res.foundWords.size() >= foundWordsLimit && res.encryptionMethod == EncryptionMethod.Vigenere) {
+                        if(res.foundWords.size() >= foundWordsLimit && res.encryptionMethodType == EncryptionMethodType.Vigenere) {
                             outFileWriter.write(res.toString());
                         }
                     }

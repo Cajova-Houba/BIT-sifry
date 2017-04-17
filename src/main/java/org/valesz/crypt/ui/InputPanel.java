@@ -22,7 +22,7 @@ public class InputPanel extends JPanel {
         add(label);
 
         encTextArea = new JTextArea();
-        encTextArea.setRows(20);
+        encTextArea.setRows(10);
         encTextArea.setAlignmentX(0f);
         JScrollPane sp = new JScrollPane(encTextArea);
         sp.setAlignmentX(LEFT_ALIGNMENT);

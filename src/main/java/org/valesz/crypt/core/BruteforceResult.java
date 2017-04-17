@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class BruteforceResult {
 
-    public final EncryptionMethod encryptionMethod;
+    public final EncryptionMethodType encryptionMethodType;
 
     public final String decryptedText;
 
@@ -17,8 +17,8 @@ public class BruteforceResult {
 
     public final List<String> foundWords;
 
-    public BruteforceResult(EncryptionMethod encryptionMethod, String decryptedText, String key, List<String> foundWords) {
-        this.encryptionMethod = encryptionMethod;
+    public BruteforceResult(EncryptionMethodType encryptionMethodType, String decryptedText, String key, List<String> foundWords) {
+        this.encryptionMethodType = encryptionMethodType;
         this.decryptedText = decryptedText;
         this.key = key;
         this.foundWords = foundWords;
@@ -27,7 +27,7 @@ public class BruteforceResult {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("method: ").append(encryptionMethod).append("\n");
+        sb.append("method: ").append(encryptionMethodType).append("\n");
         sb.append("key: ").append(key).append("\n");
         sb.append("found words: ");
         for(String word : foundWords) {

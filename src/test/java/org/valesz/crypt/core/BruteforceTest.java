@@ -2,7 +2,6 @@ package org.valesz.crypt.core;
 
 import org.junit.Test;
 
-import javax.swing.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -42,7 +41,7 @@ public class BruteforceTest {
         assertNotNull("Null returned!", results);
         BruteforceResult result = null;
         for (BruteforceResult res : results) {
-            if(res.encryptionMethod == EncryptionMethod.Atbas) {
+            if(res.encryptionMethodType == EncryptionMethodType.Atbas) {
                 result = res;
             }
         }
@@ -74,7 +73,7 @@ public class BruteforceTest {
         assertNotNull("Null returned!", results);
         List<BruteforceResult> vigenereResults = new ArrayList<BruteforceResult>();
         for (BruteforceResult res : results) {
-            if(res.encryptionMethod == EncryptionMethod.Vigenere) {
+            if(res.encryptionMethodType == EncryptionMethodType.Vigenere) {
                 vigenereResults.add(res);
             }
         }
@@ -154,7 +153,7 @@ public class BruteforceTest {
             if(result.foundWords.size() <= 1) {
                 continue;
             }
-            bfw.write("method: "+result.encryptionMethod+"\n");
+            bfw.write("method: "+result.encryptionMethodType +"\n");
             bfw.write("key: "+result.key+"\n");
             bfw.write("found words: ");
             for(String word : result.foundWords) {

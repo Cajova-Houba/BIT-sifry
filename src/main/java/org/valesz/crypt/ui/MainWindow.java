@@ -1,5 +1,7 @@
 package org.valesz.crypt.ui;
 
+import org.valesz.crypt.ui.tools.ToolsPanel;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,12 +22,15 @@ public class MainWindow extends JFrame {
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
         setSize(WIDTH, HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
         initComponents();
         pack();
     }
 
     private void initComponents() {
         inputPanel = new InputPanel();
-        add(inputPanel);
+        toolsPanel = new ToolsPanel();
+        this.getContentPane().add(inputPanel);
+        this.getContentPane().add(toolsPanel);
     }
 }
