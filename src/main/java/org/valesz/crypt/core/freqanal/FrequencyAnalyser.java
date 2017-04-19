@@ -17,23 +17,38 @@ public class FrequencyAnalyser {
      */
     private final String text;
 
+    private final String lettersOnlyText;
+
     private final int textLen;
+
+    private final int lettersOnlyTextLen;
 
 
     public FrequencyAnalyser(String text) {
         this.text = text;
         textLen = text.length();
+        lettersOnlyText = text.replaceAll("[^a-zA-Z]", "");
+        lettersOnlyTextLen = lettersOnlyText.length();
     }
 
     /**
      * Perform the analysis with given method.
      *
      * @param method Particular method to be used for frequency analysis.
-     * @param n Analyze only n-th letters/digrams/trigrams...
+     * @param n Distance between analyzed letters. If digrams/trigrams are analyzed, this is the distance between letters in them. Use 1 if you don't know what to do.
      * @param offset Start analysis from this position (non-alphabet characters ignored). Use 0 if you don't know what to do.
      * @return List of result object. Each object will contain unique string (which occurrence was analysed) and its abslute and relative count.
      */
     public List<FrequencyAnalysisResult> analyse(FrequencyAnalysisMethod method, int n, int offset) {
+
+        if(n < 1) {
+            n = 1;
+        }
+
+        if( offset < 0 || offset >= textLen) {
+            offset = 0;
+        }
+
         switch (method) {
             case Trigrams:
             case Digrams:
@@ -52,34 +67,31 @@ public class FrequencyAnalyser {
      * @return Result of digram frequency analysis. Results objects are orderd by digrams (aa, ab, ac...)
      */
     private List<FrequencyAnalysisResult> analyzeTrigrams(int n, int offset) {
-        // use tree map so results are sorted by key (=digram)
-        Map<String, FrequencyAnalysisResult> digramAnalysis = new TreeMap<String, FrequencyAnalysisResult>();
-        int realDigramCount = 0;
+        // use tree map so results are sorted by key (=trigram)
+        Map<String, FrequencyAnalysisResult> trigramAnalysis = new TreeMap<String, FrequencyAnalysisResult>();
+        int realTrigramCount = 0;
 
-        // strip all non-letter chars
-        String tmpText = text.replaceAll("[^a-zA-Z]", "");
-        int tmpTextLen = tmpText.length();
-
-
-        for(int i = offset+1; i < tmpTextLen; i+= (n+1)) {
-            // only lower case letters
-            String digram = Character.toLowerCase(text.charAt(i-1))+""+Character.toLowerCase(text.charAt(i));
-            realDigramCount++;
+        // create digram from n-th letters
+        int i = offset;
+        while (i+2*n < lettersOnlyTextLen) {
+            String trigram = Character.toLowerCase(lettersOnlyText.charAt(i))+""+Character.toLowerCase(lettersOnlyText.charAt(i+n))+""+Character.toLowerCase(lettersOnlyText.charAt(i+2*n));
+            realTrigramCount++;
 
             // add digram to map
-            if(digramAnalysis.containsKey(digram)) {
-                digramAnalysis.get(digram).incAbsoluteCount();
+            if(trigramAnalysis.containsKey(trigram)) {
+                trigramAnalysis.get(trigram).incAbsoluteCount();
             } else {
-                digramAnalysis.put(digram, new FrequencyAnalysisResult(digram, 0,0.0));
+                trigramAnalysis.put(trigram, new FrequencyAnalysisResult(trigram, 0,0.0));
             }
+            i++;
         }
 
         // relative counts
-        for(String dig : digramAnalysis.keySet()) {
-            digramAnalysis.get(dig).recountRelativeCount(realDigramCount);
+        for(String dig : trigramAnalysis.keySet()) {
+            trigramAnalysis.get(dig).recountRelativeCount(realTrigramCount);
         }
 
-        return new ArrayList<FrequencyAnalysisResult>(digramAnalysis.values());
+        return new ArrayList<FrequencyAnalysisResult>(trigramAnalysis.values());
     }
 
     /**
@@ -94,14 +106,11 @@ public class FrequencyAnalyser {
         Map<String, FrequencyAnalysisResult> digramAnalysis = new TreeMap<String, FrequencyAnalysisResult>();
         int realDigramCount = 0;
 
-        // strip all non-letter chars
-        String tmpText = text.replaceAll("[^a-zA-Z]", "");
-        int tmpTextLen = tmpText.length();
 
-
-        for(int i = offset+1; i < tmpTextLen; i+= (n+1)) {
-            // only lower case letters
-            String digram = Character.toLowerCase(text.charAt(i-1))+""+Character.toLowerCase(text.charAt(i));
+        // create digram from n-th letters
+        int i = offset;
+        while (i+n < lettersOnlyTextLen) {
+            String digram = Character.toLowerCase(lettersOnlyText.charAt(i))+""+Character.toLowerCase(lettersOnlyText.charAt(i+n));
             realDigramCount++;
 
             // add digram to map
@@ -110,6 +119,7 @@ public class FrequencyAnalyser {
             } else {
                 digramAnalysis.put(digram, new FrequencyAnalysisResult(digram, 0,0.0));
             }
+            i++;
         }
 
         // relative counts
