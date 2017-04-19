@@ -1,7 +1,9 @@
-package org.valesz.crypt.core;
+package org.valesz.crypt.core.freqanal;
+
+import org.valesz.crypt.core.Cryptor;
 
 /**
- * A simple class which represents result of frequency analysis for exactly one letter.
+ * A simple class which represents result of frequency analysis for a piece of string.
  * That means list of those object will be returned after frequency analysis.
  *
  * Created by Zdenek Vales on 19.3.2017.
@@ -17,26 +19,26 @@ public class FrequencyAnalysisResult {
         FrequencyAnalysisResult[] res = new FrequencyAnalysisResult[Cryptor.ALPHABET_LEN];
         char c = 'a';
         for(int i = 0; i < res.length; i++) {
-            res[i] = new FrequencyAnalysisResult(c,0,0);
+            res[i] = new FrequencyAnalysisResult(String.valueOf(c),0,0);
             c ++;
         }
 
         return res;
     }
 
-    private Character character;
+    private String character;
 
     private int absoluteCount;
 
     private double relativeCount;
 
-    public FrequencyAnalysisResult(Character character, int absoluteCount, double relativeCount) {
+    public FrequencyAnalysisResult(String character, int absoluteCount, double relativeCount) {
         this.character = character;
         this.absoluteCount = absoluteCount;
         this.relativeCount = relativeCount;
     }
 
-    public Character getCharacter() {
+    public String getCharacter() {
         return character;
     }
 

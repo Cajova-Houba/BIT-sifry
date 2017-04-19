@@ -1,7 +1,7 @@
 package org.valesz.crypt.ui;
 
 import org.valesz.crypt.core.Cryptor;
-import org.valesz.crypt.core.FrequencyAnalysisResult;
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;

@@ -7,15 +7,19 @@ import javax.swing.*;
  */
 public class FrequencyAnalysisTab {
     private JPanel mainPanel;
-    private JPanel freqAnalPanel;
-    private JTable freqAnalTable;
-    private JComboBox freqAnalChoose;
-    private JButton freqAnalRefresh;
-    private JPanel textPanel;
-    private JTextArea textArea;
-    private JPanel alphabetPanel;
-    private JTable alphabetTable;
-    private JButton alphabetRefresh;
+    private JPanel configPanel;
+    private JPanel lettersPanel;
+    private JPanel digramsPanel;
+    private JPanel trigramsPanel;
+    private JLabel languageText;
+    private JLabel lettersText;
+    private JLabel digramsText;
+    private JLabel trigramsText;
+    private JTable letterFreqTable;
+    private JTable digramFreqTable;
+    private JTable trigramFreqTable;
+    private JButton freqAnalBtn;
+    private JButton saveToFileBtn;
 
     public JPanel getMainPanel() {
         return mainPanel;

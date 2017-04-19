@@ -4,11 +4,12 @@ import org.valesz.crypt.core.atbas.AtbasInput;
 import org.valesz.crypt.core.atbas.AtbasMethod;
 import org.valesz.crypt.core.columnTrans.ColumnTransInput;
 import org.valesz.crypt.core.columnTrans.ColumnTransMethod;
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 import org.valesz.crypt.core.vigenere.VigenereInput;
 import org.valesz.crypt.core.vigenere.VigenereMethod;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -26,12 +27,12 @@ public class Cryptor {
     public static final int LAST_LETTER = (int)'z';
 
     /**
-     * Performs a frequency analysis with All method.
+     * Performs a frequency analysis with Letters method.
      * @param message Message.
      * @return Frequency analysis result.
      */
     public static FrequencyAnalysisResult[] frequencyAnalysis(String message) {
-        return frequencyAnalysis(message, FrequencyAnalysisMethod.All);
+        return frequencyAnalysis(message, FrequencyAnalysisMethod.Letters);
     }
 
     /**
@@ -47,7 +48,7 @@ public class Cryptor {
         StringBuilder textBuilder = new StringBuilder();
 
         switch (method) {
-            case All:
+            case Letters:
                 text = message;
                 break;
             case EvenChars:

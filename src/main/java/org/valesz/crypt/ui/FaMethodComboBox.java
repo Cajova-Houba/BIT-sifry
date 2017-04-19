@@ -1,6 +1,6 @@
 package org.valesz.crypt.ui;
 
-import org.valesz.crypt.core.FrequencyAnalysisMethod;
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 
 import javax.swing.*;
 

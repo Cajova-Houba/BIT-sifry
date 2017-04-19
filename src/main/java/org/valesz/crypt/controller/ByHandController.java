@@ -2,8 +2,8 @@ package org.valesz.crypt.controller;
 
 
 import org.valesz.crypt.core.Cryptor;
-import org.valesz.crypt.core.FrequencyAnalysisMethod;
-import org.valesz.crypt.core.FrequencyAnalysisResult;
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 import org.valesz.crypt.core.TextUtils;
 import org.valesz.crypt.ui.AlphabetTable;
 import org.valesz.crypt.ui.FaMethodComboBox;

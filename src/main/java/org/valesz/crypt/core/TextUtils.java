@@ -1,5 +1,7 @@
 package org.valesz.crypt.core;
 
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
+
 /**
  * This class will contain some cools utils for strings.
  *
@@ -8,14 +10,14 @@ package org.valesz.crypt.core;
 public class TextUtils {
 
     /**
-     * Returns a complex view for encrypted message with All method.
+     * Returns a complex view for encrypted message with Letters method.
      * @param encryptedMessage Encrypted message.
      * @param alphabet Alphabet
      * @param charsPerLine Number of characters per one line.
      * @return Complex view.
      */
     public static String getComplexViewText(String encryptedMessage, String[] alphabet, int charsPerLine) {
-        return getComplexViewText(encryptedMessage, alphabet, charsPerLine, FrequencyAnalysisMethod.All);
+        return getComplexViewText(encryptedMessage, alphabet, charsPerLine, FrequencyAnalysisMethod.Letters);
     }
 
     /**
@@ -68,7 +70,7 @@ public class TextUtils {
                     } else {
                         // character is defined, append it
                         switch (replacingMethod) {
-                            case All:
+                            case Letters:
                                 res.append(alphabet[originalLetter - Cryptor.FIRST_LETTER]);
                                 break;
                             case EvenChars:
