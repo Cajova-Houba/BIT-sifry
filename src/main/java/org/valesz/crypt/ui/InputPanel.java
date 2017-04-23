@@ -1,5 +1,7 @@
 package org.valesz.crypt.ui;
 
+import org.valesz.crypt.controller.AppController;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,7 +12,11 @@ public class InputPanel extends JPanel {
 
     private JTextArea encTextArea;
 
-    public InputPanel() {
+    private AppController controller;
+
+    public InputPanel(AppController controller) {
+        this.controller = controller;
+        this.controller.setInputPanel(this);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         initComponents();
     }
@@ -25,5 +31,9 @@ public class InputPanel extends JPanel {
         JScrollPane sp = new JScrollPane(encTextArea);
 //        sp.setAlignmentX(JScrollPane.LEFT_ALIGNMENT);
         add(sp);
+    }
+
+    public String getEncryptedText() {
+        return encTextArea.getText();
     }
 }

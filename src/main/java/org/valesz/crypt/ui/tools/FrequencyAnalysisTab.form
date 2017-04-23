@@ -150,7 +150,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="a0381" class="javax.swing.JTable" binding="letterFreqTable">
+          <component id="a0381" class="javax.swing.JTable" binding="letterFreqTable" custom-create="true">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="50"/>
@@ -174,7 +174,7 @@
               <text value="Digrams frequency"/>
             </properties>
           </component>
-          <component id="eebf6" class="javax.swing.JTable" binding="digramFreqTable">
+          <component id="eebf6" class="javax.swing.JTable" binding="digramFreqTable" custom-create="true">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="50"/>
@@ -208,7 +208,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="13746" class="javax.swing.JTable" binding="trigramFreqTable">
+          <component id="13746" class="javax.swing.JTable" binding="trigramFreqTable" custom-create="true">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="50"/>

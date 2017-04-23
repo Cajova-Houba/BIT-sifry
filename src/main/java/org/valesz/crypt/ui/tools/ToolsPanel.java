@@ -1,5 +1,7 @@
 package org.valesz.crypt.ui.tools;
 
+import org.valesz.crypt.controller.AppController;
+
 import javax.swing.*;
 
 /**
@@ -7,15 +9,21 @@ import javax.swing.*;
  */
 public class ToolsPanel extends JTabbedPane {
 
+    private FrequencyAnalysisTab faTab;
     private JPanel freqAnalaTab;
     private JPanel vigenereTab;
 
-    public ToolsPanel() {
+    private AppController controller;
+
+    public ToolsPanel(AppController controller) {
+        this.controller = controller;
         initComponents();
     }
 
     private void initComponents() {
-        freqAnalaTab = new FrequencyAnalysisTab().getMainPanel();
+        faTab = new FrequencyAnalysisTab();
+        faTab.setController(controller);
+        freqAnalaTab = faTab.getMainPanel();
         vigenereTab = new VigenereTab().getMainPanel();
         addTab("Frekvenční analýza", freqAnalaTab);
         addTab("Vigenere", vigenereTab);

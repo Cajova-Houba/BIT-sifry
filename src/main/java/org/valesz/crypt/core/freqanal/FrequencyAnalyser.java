@@ -51,6 +51,7 @@ public class FrequencyAnalyser {
 
         switch (method) {
             case Trigrams:
+                return analyzeTrigrams(n, offset);
             case Digrams:
                 return analyzeDigrams(n, offset);
             case Letters:
@@ -81,7 +82,7 @@ public class FrequencyAnalyser {
             if(trigramAnalysis.containsKey(trigram)) {
                 trigramAnalysis.get(trigram).incAbsoluteCount();
             } else {
-                trigramAnalysis.put(trigram, new FrequencyAnalysisResult(trigram, 0,0.0));
+                trigramAnalysis.put(trigram, new FrequencyAnalysisResult(trigram, 1,0.0));
             }
             i++;
         }
@@ -117,7 +118,7 @@ public class FrequencyAnalyser {
             if(digramAnalysis.containsKey(digram)) {
                 digramAnalysis.get(digram).incAbsoluteCount();
             } else {
-                digramAnalysis.put(digram, new FrequencyAnalysisResult(digram, 0,0.0));
+                digramAnalysis.put(digram, new FrequencyAnalysisResult(digram, 1,0.0));
             }
             i++;
         }

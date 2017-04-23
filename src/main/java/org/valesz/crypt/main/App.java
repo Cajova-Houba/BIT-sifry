@@ -1,5 +1,6 @@
 package org.valesz.crypt.main;
 
+import org.valesz.crypt.controller.AppController;
 import org.valesz.crypt.core.BruteforceResult;
 import org.valesz.crypt.core.EncryptionMethodType;
 import org.valesz.crypt.ui.MainWindow;
@@ -38,7 +39,7 @@ public class App
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
-        JFrame frame = new MainWindow();
+        JFrame frame = new MainWindow(AppController.getInstance());
         frame.setVisible(true);
 //        try {
 //            parallelBruteForce("czech_words.txt", "bf-results.txt");
