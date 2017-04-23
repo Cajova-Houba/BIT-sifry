@@ -142,7 +142,7 @@ public class FrequencyAnalyser {
         int realLength = 0;
         for(int i = offset; i < textLen; i += n) {
             char c = text.charAt(i);
-            if(!Character.isLetter(c)) {
+            if(!Character.isLetter(c) || c > 128) {
                 continue;
             }
 

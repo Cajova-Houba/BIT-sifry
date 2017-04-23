@@ -37,6 +37,20 @@ public class FrequencyAnalysisTableModel extends AbstractTableModel {
     }
 
     @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                return String.class;
+            case 1:
+                return Integer.class;
+            case 2:
+                return Double.class;
+            default:
+                return super.getColumnClass(columnIndex);
+        }
+    }
+
+    @Override
     public String getColumnName(int column) {
         return columnHeaders[column];
     }
