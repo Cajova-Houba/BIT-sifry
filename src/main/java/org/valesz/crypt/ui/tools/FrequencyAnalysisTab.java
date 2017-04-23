@@ -84,4 +84,12 @@ public class FrequencyAnalysisTab {
     public void setTrigramCount(String cnt) {
         trigramsText.setText(cnt);
     }
+
+    public int getPeriod() {
+        return (int)periodSpinner.getValue();
+    }
+
+    public int getOffset() {
+        return (int)offsetSpinner.getValue();
+    }
 }

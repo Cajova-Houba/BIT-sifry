@@ -45,10 +45,24 @@ public class AppController {
 
     public void performFrequencyAnalysis() {
         String encryptedText = inputPanel.getEncryptedText();
+        int period = frequencyAnalysisTab.getPeriod();
+        int offset = frequencyAnalysisTab.getOffset();
+
+        System.out.println(String.format("Period: %d, offset: %d.",period, offset));
+        if(period >= encryptedText.length()) {
+            mainWindow.displayStatusMessage("Period is bigger than encrypted message length.");
+            return;
+        }
+
+        if(offset >= encryptedText.length()) {
+            mainWindow.displayStatusMessage("Offset is bigger thatn encrypted message length.");
+            return;
+        }
+
         FrequencyAnalyser fa = new FrequencyAnalyser(encryptedText);
-        List<FrequencyAnalysisResult> letters = fa.analyse(FrequencyAnalysisMethod.Letters, 0,0);
-        List<FrequencyAnalysisResult> digrams = fa.analyse(FrequencyAnalysisMethod.Digrams, 0,0);
-        List<FrequencyAnalysisResult> trigrams = fa.analyse(FrequencyAnalysisMethod.Trigrams, 0,0);
+        List<FrequencyAnalysisResult> letters = fa.analyse(FrequencyAnalysisMethod.Letters, period,offset);
+        List<FrequencyAnalysisResult> digrams = fa.analyse(FrequencyAnalysisMethod.Digrams, period,offset);
+        List<FrequencyAnalysisResult> trigrams = fa.analyse(FrequencyAnalysisMethod.Trigrams, period,offset);
 
         frequencyAnalysisTab.setLanguage("CZ");
         frequencyAnalysisTab.setLetterFreqAnal(letters);

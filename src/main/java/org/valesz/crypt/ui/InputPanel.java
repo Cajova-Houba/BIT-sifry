@@ -27,7 +27,8 @@ public class InputPanel extends JPanel {
         add(label);
 
         encTextArea = new JTextArea();
-        encTextArea.setRows(2);
+        encTextArea.setRows(5);
+        encTextArea.setLineWrap(true);
         JScrollPane sp = new JScrollPane(encTextArea);
 //        sp.setAlignmentX(JScrollPane.LEFT_ALIGNMENT);
         add(sp);
