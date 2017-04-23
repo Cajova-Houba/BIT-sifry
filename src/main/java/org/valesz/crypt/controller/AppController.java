@@ -4,6 +4,7 @@ import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 import org.valesz.crypt.ui.InputPanel;
+import org.valesz.crypt.ui.MainWindow;
 import org.valesz.crypt.ui.tools.FrequencyAnalysisTab;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class AppController {
     private static AppController instance = new AppController();
 
     // UI components
+    private MainWindow mainWindow;
     private FrequencyAnalysisTab frequencyAnalysisTab;
     private InputPanel inputPanel;
 
@@ -35,6 +37,10 @@ public class AppController {
 
     public void setInputPanel(InputPanel inputPanel) {
         this.inputPanel = inputPanel;
+    }
+
+    public void setMainWindow(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
     }
 
     public void performFrequencyAnalysis() {

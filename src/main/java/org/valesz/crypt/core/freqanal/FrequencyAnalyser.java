@@ -140,8 +140,8 @@ public class FrequencyAnalyser {
     private List<FrequencyAnalysisResult> analyzeLetters(int n, int offset) {
         FrequencyAnalysisResult[] frequencyAnalysisResults = FrequencyAnalysisResult.prepareForStandardAlphabet();
         int realLength = 0;
-        for(int i = offset; i < textLen; i += n) {
-            char c = text.charAt(i);
+        for(int i = offset; i < lettersOnlyTextLen; i += n) {
+            char c = lettersOnlyText.charAt(i);
             if(!Character.isLetter(c) || c > 128) {
                 continue;
             }

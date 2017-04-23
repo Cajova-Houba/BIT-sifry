@@ -4,6 +4,7 @@ import org.valesz.crypt.controller.AppController;
 import org.valesz.crypt.ui.tools.ToolsPanel;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 
 /**
@@ -17,16 +18,18 @@ public class MainWindow extends JFrame {
 
     private JPanel inputPanel;
     private JTabbedPane toolsPanel;
+    private JLabel statusLabel;
 
     private AppController controller;
 
     public MainWindow(AppController controller){
         super(TITLE);
         this.controller = controller;
+        controller.setMainWindow(this);
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
         setSize(WIDTH, HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setLayout(new BoxLayout(this.getContentPane(), BoxLayout.PAGE_AXIS));
+        setLayout(new BorderLayout());
         initComponents();
         pack();
     }
@@ -34,7 +37,25 @@ public class MainWindow extends JFrame {
     private void initComponents() {
         inputPanel = new InputPanel(controller);
         toolsPanel = new ToolsPanel(controller);
-        this.getContentPane().add(inputPanel);
-        this.getContentPane().add(toolsPanel);
+        this.getContentPane().add(inputPanel, BorderLayout.NORTH);
+        this.getContentPane().add(toolsPanel, BorderLayout.CENTER);
+        initStatusPanel();
+    }
+
+    private void initStatusPanel() {
+        JPanel statusPanel = new JPanel();
+        statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        this.add(statusPanel, BorderLayout.SOUTH);
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+        statusPanel.setPreferredSize(new Dimension(WIDTH, 20));
+        statusPanel.setAlignmentX(0f);
+        statusLabel = new JLabel("Status: Running.");
+        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        statusLabel.setAlignmentX(0f);
+        statusPanel.add(statusLabel);
+    }
+
+    public void displayStatusMessage(String message) {
+        statusLabel.setText("Status: "+message);
     }
 }

@@ -38,6 +38,48 @@ public class FrequencyAnalyserTest {
     }
 
     @Test
+    public void testLetterPeriodFrequencyAnalysis() {
+        String toAnalyse = "abc ab c\n a bcab";
+        int absCount = 2;
+        double relCount = 2 / 6.0;
+        FrequencyAnalyser analyser = new FrequencyAnalyser(toAnalyse);
+        List<FrequencyAnalysisResult> res = analyser.analyse(FrequencyAnalysisMethod.Letters, 2,0);
+        assertNotNull("Null returned!", res);
+        assertEquals("Three result objects expected!", Cryptor.ALPHABET_LEN, res.size());
+        for(FrequencyAnalysisResult r : res) {
+            String l = r.getCharacter();
+            if(l.equals("a") || l.equals("b") || l.equals("c")) {
+                assertEquals("Wrong absolute count for letter "+l+"!", absCount, r.getAbsoluteCount());
+                assertEquals("Wrong relative count for letter "+l+"!", relCount, r.getRelativeCount(), 0.01);
+            } else {
+                assertEquals("Wrong absolute count for letter "+l+"!", 0, r.getAbsoluteCount());
+                assertEquals("Wrong relative count for letter "+l+"!", 0, r.getRelativeCount(), 0.01);
+            }
+        }
+    }
+
+    @Test
+    public void testLetterPeriodOffsetFrequencyAnalysis() {
+        String toAnalyse = "abc ab c\n a bcabc";
+        int absCount = 2;
+        double relCount = 2 / 6.0;
+        FrequencyAnalyser analyser = new FrequencyAnalyser(toAnalyse);
+        List<FrequencyAnalysisResult> res = analyser.analyse(FrequencyAnalysisMethod.Letters, 2,1);
+        assertNotNull("Null returned!", res);
+        assertEquals("Three result objects expected!", Cryptor.ALPHABET_LEN, res.size());
+        for(FrequencyAnalysisResult r : res) {
+            String l = r.getCharacter();
+            if(l.equals("a") || l.equals("b") || l.equals("c")) {
+                assertEquals("Wrong absolute count for letter "+l+"!", absCount, r.getAbsoluteCount());
+                assertEquals("Wrong relative count for letter "+l+"!", relCount, r.getRelativeCount(), 0.01);
+            } else {
+                assertEquals("Wrong absolute count for letter "+l+"!", 0, r.getAbsoluteCount());
+                assertEquals("Wrong relative count for letter "+l+"!", 0, r.getRelativeCount(), 0.01);
+            }
+        }
+    }
+
+    @Test
     public void testDigramFrequencyAnalysis() {
         String toAnalyse = "abc ab c\n a bca";
         int absCount = 3;
@@ -55,6 +97,48 @@ public class FrequencyAnalyserTest {
     }
 
     @Test
+    public void testDigramPeriodFrequencyAnalysis() {
+        String toAnalyse = "abc ab c\n a b";
+        int absCount = 2;
+        double relCount = 2 / 6.0;
+        FrequencyAnalyser analyser = new FrequencyAnalyser(toAnalyse);
+        List<FrequencyAnalysisResult> res = analyser.analyse(FrequencyAnalysisMethod.Digrams, 2,0);
+        assertNotNull("Null returned!", res);
+        assertEquals("Three result objects expected!", 3, res.size());
+        for(FrequencyAnalysisResult r : res) {
+            String l = r.getCharacter();
+            if(l.equals("ac") || l.equals("ba") || l.equals("cb")) {
+                assertEquals("Wrong absolute count for letter "+l+"!", absCount, r.getAbsoluteCount());
+                assertEquals("Wrong relative count for letter "+l+"!", relCount, r.getRelativeCount(), 0.01);
+            } else {
+                assertEquals("Wrong absolute count for letter "+l+"!", 0, r.getAbsoluteCount());
+                assertEquals("Wrong relative count for letter "+l+"!", 0, r.getRelativeCount(), 0.01);
+            }
+        }
+    }
+
+    @Test
+    public void testDigramPeriodOffsetFrequencyAnalysis() {
+        String toAnalyse = "abc ab c\n a bc";
+        int absCount = 2;
+        double relCount = 2 / 6.0;
+        FrequencyAnalyser analyser = new FrequencyAnalyser(toAnalyse);
+        List<FrequencyAnalysisResult> res = analyser.analyse(FrequencyAnalysisMethod.Digrams, 2,1);
+        assertNotNull("Null returned!", res);
+        assertEquals("Three result objects expected!", 3, res.size());
+        for(FrequencyAnalysisResult r : res) {
+            String l = r.getCharacter();
+            if(l.equals("ac") || l.equals("ba") || l.equals("cb")) {
+                assertEquals("Wrong absolute count for letter "+l+"!", absCount, r.getAbsoluteCount());
+                assertEquals("Wrong relative count for letter "+l+"!", relCount, r.getRelativeCount(), 0.01);
+            } else {
+                assertEquals("Wrong absolute count for letter "+l+"!", 0, r.getAbsoluteCount());
+                assertEquals("Wrong relative count for letter "+l+"!", 0, r.getRelativeCount(), 0.01);
+            }
+        }
+    }
+
+    @Test
     public void testTrigramFrequencyAnalysis() {
         String toAnalyse = "abc ab c\n a bcab";
         int absCount = 3;
@@ -66,6 +150,40 @@ public class FrequencyAnalyserTest {
         for(FrequencyAnalysisResult r : res) {
             String l = r.getCharacter();
             assertTrue("Wrong letter: "+l+"!", l.equals("abc") || l.equals("bca") || l.equals("cab"));
+            assertEquals("Wrong absolute count!", absCount, r.getAbsoluteCount());
+            assertEquals("Wrong relative count!", relCount, r.getRelativeCount(), 0.01);
+        }
+    }
+
+    @Test
+    public void testTrigramPeriodFrequencyAnalysis() {
+        String toAnalyse = "abc ab c\n a bca";
+        int absCount = 2;
+        double relCount = 2 / 6.0;
+        FrequencyAnalyser analyser = new FrequencyAnalyser(toAnalyse);
+        List<FrequencyAnalysisResult> res = analyser.analyse(FrequencyAnalysisMethod.Trigrams, 2,0);
+        assertNotNull("Null returned!", res);
+        assertEquals("Three result objects expected!", 3, res.size());
+        for(FrequencyAnalysisResult r : res) {
+            String l = r.getCharacter();
+            assertTrue("Wrong letter: "+l+"!", l.equals("acb") || l.equals("bac") || l.equals("cba"));
+            assertEquals("Wrong absolute count!", absCount, r.getAbsoluteCount());
+            assertEquals("Wrong relative count!", relCount, r.getRelativeCount(), 0.01);
+        }
+    }
+
+    @Test
+    public void testTrigramPeriodOffsetFrequencyAnalysis() {
+        String toAnalyse = "abc ab c\n a bcab";
+        int absCount = 2;
+        double relCount = 2 / 6.0;
+        FrequencyAnalyser analyser = new FrequencyAnalyser(toAnalyse);
+        List<FrequencyAnalysisResult> res = analyser.analyse(FrequencyAnalysisMethod.Trigrams, 2,1);
+        assertNotNull("Null returned!", res);
+        assertEquals("Three result objects expected!", 3, res.size());
+        for(FrequencyAnalysisResult r : res) {
+            String l = r.getCharacter();
+            assertTrue("Wrong letter: "+l+"!", l.equals("acb") || l.equals("bac") || l.equals("cba"));
             assertEquals("Wrong absolute count!", absCount, r.getAbsoluteCount());
             assertEquals("Wrong relative count!", relCount, r.getRelativeCount(), 0.01);
         }

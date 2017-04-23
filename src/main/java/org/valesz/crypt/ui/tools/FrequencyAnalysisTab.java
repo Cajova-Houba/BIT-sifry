@@ -27,6 +27,8 @@ public class FrequencyAnalysisTab {
     private JTable trigramFreqTable;
     private JButton freqAnalBtn;
     private JButton saveToFileBtn;
+    private JSpinner offsetSpinner;
+    private JSpinner periodSpinner;
 
     private AppController controller;
 
@@ -42,6 +44,9 @@ public class FrequencyAnalysisTab {
         letterFreqTable = new FrequencyAnalysisTable();
         digramFreqTable = new FrequencyAnalysisTable(Arrays.asList(new FrequencyAnalysisResult("aa",0,0)));
         trigramFreqTable = new FrequencyAnalysisTable(Arrays.asList(new FrequencyAnalysisResult("aaa",0,0)));
+
+        periodSpinner = new JSpinner(new SpinnerNumberModel(1,1,99,1));
+        offsetSpinner = new JSpinner(new SpinnerNumberModel(1,1,99,1));
     }
 
     public void setController(AppController controller) {
