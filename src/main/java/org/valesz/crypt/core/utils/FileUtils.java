@@ -1,13 +1,14 @@
 package org.valesz.crypt.core.utils;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple library class to read string from file and write string to file.
  *
  * Created by valesz on 19.04.2017.
  */
-// todo: test
 public class FileUtils {
 
     /**
@@ -31,16 +32,33 @@ public class FileUtils {
      * @return Text from file.
      */
     public static String readFromFile(String fileName) throws FileNotFoundException, IOException {
+        StringBuilder sb = new StringBuilder();
+        for(String line : readLinesFromFile(fileName)) {
+            sb.append(line);
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Reads lines from file and returns them.
+     *
+     * @param fileName Full name of the file.
+     * @return List of lines in the file.
+     */
+    // todo: test
+    public static List<String> readLinesFromFile(String fileName) throws FileNotFoundException, IOException {
         File file = new File(fileName);
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
+        List<String> lines = new ArrayList<String>();
         StringBuilder sb = new StringBuilder();
         String line = "";
         while((line = br.readLine()) != null) {
-            sb.append(line);
+            lines.add(line);
         }
         br.close();
-        return sb.toString();
+        return lines;
     }
 
 }

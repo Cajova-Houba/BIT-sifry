@@ -10,7 +10,7 @@ import java.util.List;
 public interface IDictionary {
 
     /**
-     * Returns a list of words expected in decrypted text..
+     * Returns a list of words expected in decrypted text.
      * @return
      */
     List<String> getExpectedWords();
