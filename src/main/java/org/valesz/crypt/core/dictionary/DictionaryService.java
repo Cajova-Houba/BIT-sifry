@@ -1,9 +1,12 @@
 package org.valesz.crypt.core.dictionary;
 
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -13,7 +16,6 @@ import java.util.logging.Logger;
  *
  * Created by valesz on 24.04.2017.
  */
-// todo: test
 public class DictionaryService {
 
     private static final Logger logger = Logger.getLogger(DictionaryService.class.getName());
@@ -63,6 +65,7 @@ public class DictionaryService {
      *
      * @param baseDirectory Base directory with dictionaries. All files with DictionaryLoader.DICTIONARY_FILE_EXTENSION will be used.
      */
+    // todo: test
     public void reloadDictionaries(String baseDirectory) throws IOException, NotADictionaryFileException {
         File baseDir = new File(baseDirectory);
 
@@ -94,6 +97,28 @@ public class DictionaryService {
      */
     public void addDictionary(IDictionary dictionary) {
         loadedDictionaries.put(dictionary.getLanguageCode(), dictionary);
+    }
+
+
+    /**
+     * Returns a dictionary which has the lowest deviance from provided letter frequency.
+     * @param letterFrequency Letter frequency to be tested.
+     * @return Dictionary or null, if no dictionary is currently loaded.
+     */
+    // todo: test
+    public IDictionary getLowestDevianceDictionary(List<FrequencyAnalysisResult> letterFrequency) {
+        IDictionary dictionary = null;
+        double minDeviance = Double.MAX_VALUE;
+
+        for(IDictionary d : loadedDictionaries.values()) {
+            double dev = d.calculateDeviation(letterFrequency);
+            if(dev < minDeviance) {
+                minDeviance = dev;
+                dictionary = d;
+            }
+        }
+
+        return dictionary;
     }
 
 

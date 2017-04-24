@@ -38,6 +38,8 @@ public class App
 
     public static void main( String[] args )
     {
+        // TODO: make sure the default dictionary is loaded properly
+
         System.out.println( "Hello World!" );
         JFrame frame = new MainWindow(AppController.getInstance());
         frame.setVisible(true);
