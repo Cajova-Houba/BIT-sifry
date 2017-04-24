@@ -7,7 +7,7 @@ import java.util.List;
  *
  * Created by Zdenek Vales on 18.3.2017.
  */
-public interface IDictionary {
+public interface OldDictionary {
 
     /**
      * Returns a list of words expected in decrypted text.

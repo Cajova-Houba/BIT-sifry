@@ -93,7 +93,7 @@ public class Cryptor {
      * @param dictionary Dictionary to be used.
      * @return List of found results. If no matches are found, empty list is returned. Never null.
      */
-    public static List<BruteforceResult> bruteforce(String message, IDictionary dictionary) {
+    public static List<BruteforceResult> bruteforce(String message, OldDictionary dictionary) {
         List<BruteforceResult> res = new ArrayList<BruteforceResult>();
 
         List<String> expectedWords = dictionary.getExpectedWords();

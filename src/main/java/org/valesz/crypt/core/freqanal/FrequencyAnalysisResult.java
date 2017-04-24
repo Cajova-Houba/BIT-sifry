@@ -65,4 +65,27 @@ public class FrequencyAnalysisResult {
     public void recountRelativeCount(int length) {
         this.relativeCount = this.absoluteCount / (double)length;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FrequencyAnalysisResult that = (FrequencyAnalysisResult) o;
+
+        if (absoluteCount != that.absoluteCount) return false;
+        if (Double.compare(that.relativeCount, relativeCount) != 0) return false;
+        return character.equals(that.character);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = character.hashCode();
+        result = 31 * result + absoluteCount;
+        temp = Double.doubleToLongBits(relativeCount);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }

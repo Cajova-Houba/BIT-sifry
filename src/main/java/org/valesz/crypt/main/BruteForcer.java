@@ -2,7 +2,7 @@ package org.valesz.crypt.main;
 
 import org.valesz.crypt.core.BruteforceResult;
 import org.valesz.crypt.core.Cryptor;
-import org.valesz.crypt.core.IDictionary;
+import org.valesz.crypt.core.OldDictionary;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class BruteForcer extends Thread {
 
 
     public void run() {
-        results = Cryptor.bruteforce(message, new IDictionary() {
+        results = Cryptor.bruteforce(message, new OldDictionary() {
             public List<String> getExpectedWords() {
                 return expectedWords;
             }
