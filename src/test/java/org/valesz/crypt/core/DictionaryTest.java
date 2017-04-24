@@ -7,6 +7,7 @@ import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -56,5 +57,26 @@ public class DictionaryTest {
         assertEquals("Wrong letter frequencies count!", 2, letterFrequencies.size());
         assertEquals("Wrong 1 letter frequency!", first, letterFrequencies.get(0));
         assertEquals("Wrong 2 letter frequency!", second, letterFrequencies.get(1));
+    }
+
+    @Test
+    public void testCalculateDeviation() throws IOException, NotADictionaryFileException {
+        String dictName = "/testDictionary.txt";
+        IDictionary dictionary = DictionaryLoader.loadDictionaryFromFile(getClass().getResource(dictName).getPath());
+        List<FrequencyAnalysisResult> other = Arrays.asList(
+                new FrequencyAnalysisResult("a",0,0.1),
+                new FrequencyAnalysisResult("a",0,0.2)
+        );
+
+        double expected = Math.sqrt((Math.pow(0.5 - 0.1,2) + Math.pow(0.6 - 0.2,2))/2);
+        assertEquals("Wrong deviation!", expected, dictionary.calculateDeviation(other), 0.01);
+    }
+
+    @Test
+    public void testCalculateBadDeviation() throws IOException, NotADictionaryFileException {
+        String dictName = "/testDictionary.txt";
+        IDictionary dictionary = DictionaryLoader.loadDictionaryFromFile(getClass().getResource(dictName).getPath());
+        double dev = dictionary.calculateDeviation(Arrays.asList());
+        assertTrue("NaN should be returned!", Double.isNaN(dev));
     }
 }

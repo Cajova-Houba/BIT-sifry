@@ -27,11 +27,11 @@ public interface IDictionary {
     List<FrequencyAnalysisResult> getLettersFrequency();
 
     /**
-     * Calculates deviance between the letter frequency of this dictionary with another set of letter frequency.
+     * Calculates deviation between the letter frequency of this dictionary with another set of letter frequency.
      *
      * @param frequencyAnalysisResults List containing the letter frequencies. Note that length and ordering of this list should be same as
      *                                 the one returned by getLettersFrequency().
-     * @return
+     * @return Relative deviance. If the provided list has wrong size, Double.NaN is returned.
      */
-    double calculateDeviance(List<FrequencyAnalysisResult> frequencyAnalysisResults);
+    double calculateDeviation(List<FrequencyAnalysisResult> frequencyAnalysisResults);
 }

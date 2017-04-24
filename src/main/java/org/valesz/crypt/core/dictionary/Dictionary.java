@@ -2,6 +2,7 @@ package org.valesz.crypt.core.dictionary;
 
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -29,8 +30,25 @@ public class Dictionary implements IDictionary{
         return letterFrequency;
     }
 
-    public double calculateDeviance(List<FrequencyAnalysisResult> frequencyAnalysisResults) {
+    public double calculateDeviation(List<FrequencyAnalysisResult> frequencyAnalysisResults) {
         // todo
-        return 0;
+        if(frequencyAnalysisResults.size() != letterFrequency.size()) {
+            return Double.NaN;
+        }
+
+        double relativeDeviance = 0d;
+        Iterator<FrequencyAnalysisResult> thisLetterFreqIt = letterFrequency.iterator();
+        Iterator<FrequencyAnalysisResult> otherLetterFreqIt = frequencyAnalysisResults.iterator();
+        while(thisLetterFreqIt.hasNext()) {
+            double thisRelCount = thisLetterFreqIt.next().getRelativeCount();
+            double otherRelCount = otherLetterFreqIt.next().getRelativeCount();
+
+            relativeDeviance += Math.pow((thisRelCount-otherRelCount),2);
+
+        }
+
+        relativeDeviance /= letterFrequency.size();
+
+        return Math.sqrt(relativeDeviance);
     }
 }
