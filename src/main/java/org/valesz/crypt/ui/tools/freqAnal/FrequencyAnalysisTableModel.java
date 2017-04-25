@@ -1,4 +1,4 @@
-package org.valesz.crypt.ui.tools;
+package org.valesz.crypt.ui.tools.freqAnal;
 
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 

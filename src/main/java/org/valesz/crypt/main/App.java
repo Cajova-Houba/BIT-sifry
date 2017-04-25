@@ -3,6 +3,7 @@ package org.valesz.crypt.main;
 import org.valesz.crypt.controller.AppController;
 import org.valesz.crypt.core.BruteforceResult;
 import org.valesz.crypt.core.EncryptionMethodType;
+import org.valesz.crypt.core.dictionary.DictionaryService;
 import org.valesz.crypt.ui.MainWindow;
 
 import javax.swing.*;
@@ -38,9 +39,9 @@ public class App
 
     public static void main( String[] args )
     {
+        logger.info("Starting application.");
         // TODO: make sure the default dictionary is loaded properly
-
-        System.out.println( "Hello World!" );
+        DictionaryService.getInstance();
         JFrame frame = new MainWindow(AppController.getInstance());
         frame.setVisible(true);
 //        try {

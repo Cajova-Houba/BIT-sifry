@@ -1,13 +1,10 @@
-package org.valesz.crypt.ui.tools;
+package org.valesz.crypt.ui.tools.freqAnal;
 
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

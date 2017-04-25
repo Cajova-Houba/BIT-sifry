@@ -38,6 +38,7 @@ public class DictionaryService {
         try {
             String baseDir = getClass().getProtectionDomain().getCodeSource().getLocation().toString();
             reloadDictionaries(baseDir);
+            logger.info("Dictionary service initialized with "+loadedDictionaries.size()+" dictionaries.");
         } catch (Exception e) {
             logger.severe("Initialization failed with exception: "+e.getClass()+". Message: "+e.getMessage());
         }

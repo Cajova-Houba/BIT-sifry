@@ -31,7 +31,6 @@ public class Dictionary implements IDictionary{
     }
 
     public double calculateDeviation(List<FrequencyAnalysisResult> frequencyAnalysisResults) {
-        // todo
         if(frequencyAnalysisResults.size() != letterFrequency.size()) {
             return Double.NaN;
         }

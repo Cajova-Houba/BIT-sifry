@@ -1,11 +1,9 @@
-package org.valesz.crypt.ui.tools;
+package org.valesz.crypt.ui.tools.freqAnal;
 
 import org.valesz.crypt.controller.AppController;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 
