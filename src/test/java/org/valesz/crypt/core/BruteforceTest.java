@@ -1,14 +1,20 @@
 package org.valesz.crypt.core;
 
+import org.junit.Ignore;
 import org.junit.Test;
+import org.valesz.crypt.core.dictionary.DictionaryLoader;
+import org.valesz.crypt.core.dictionary.DictionaryService;
+import org.valesz.crypt.core.dictionary.IDictionary;
+import org.valesz.crypt.core.dictionary.NotADictionaryFileException;
+import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -18,6 +24,135 @@ import static org.junit.Assert.*;
  * Created by Zdenek Vales on 18.3.2017.
  */
 public class BruteforceTest {
+
+    /**
+     * This test case demonstrates the process of breaking the vigenere cipher with key len 1.
+     * @throws IOException
+     * @throws NotADictionaryFileException
+     */
+    @Test
+    public void testBreakEasyVigenere() throws IOException, NotADictionaryFileException {
+        DictionaryService dictionaryService = DictionaryService.getInstance();
+        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/cz.dict")));
+        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/en.dict")));
+        List<String> czechWords = Arrays.asList(
+                "chudak",
+                "lepenka",
+                "kazdy",
+                "uthuje",
+                "peticipou",
+                "vyrezu",
+                "hvezdu",
+                "nabarvim"
+        );
+        String message = "Chudak Lepenka Kazdy si z ni ted utahuje Ja ne Vezmu pilku na lepenku a vyrezu z ni peticipou hvezdu nabarvim cervene a zavesim Spickou dolu At kazdy vidi";
+        String realKey = "k";
+        String expLanguage = "CZ";
+
+        String encMessage = Cryptor.vigenere(message, realKey);
+
+        // try for key len = 1, this would be done for the range of key lengths
+        // and the dictionary with the lowest deviation would be used
+        int keyLen = 1;
+        FrequencyAnalyser fa = new FrequencyAnalyser(encMessage);
+        List<FrequencyAnalysisResult> faLetters = fa.analyse(FrequencyAnalysisMethod.Letters, keyLen,0);
+
+        IDictionary dictionary = dictionaryService.getLowestDevianceDictionary(faLetters);
+        assertNotNull("Null dictionary!", dictionary);
+        assertEquals("Wrong language!", expLanguage, dictionary.getLanguageCode());
+
+        // try various keys
+        String probablyKey = "a";
+        char[] tryKey = new char[keyLen];
+        int mostMatches = Integer.MIN_VALUE;
+        tryKey[0] = 'a';
+        for(int i = 0; i < 26; i++) {
+            String tmp = Cryptor.deVigenere(encMessage, new String(tryKey));
+            int matchCntr = 0;
+            for(String word : czechWords) {
+                if(tmp.contains(word)) {
+                    matchCntr++;
+                }
+            }
+
+            if(matchCntr > mostMatches) {
+                mostMatches = matchCntr;
+                probablyKey = new String(tryKey);
+            }
+
+            tryKey[0]++;
+        }
+
+        assertEquals("Wrong key!", realKey, probablyKey);
+    }
+
+    @Test
+    public void testBreakVigenere() throws IOException, NotADictionaryFileException {
+        DictionaryService dictionaryService = DictionaryService.getInstance();
+        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/cz.dict")));
+        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/en.dict")));
+        List<String> czechWords = Arrays.asList(
+                "chudak",
+                "lepenka",
+                "kazdy",
+                "uthuje",
+                "peticipou",
+                "vyrezu",
+                "hvezdu",
+                "nabarvim"
+        );
+        String message = "Chudak Lepenka Kazdy si z ni ted utahuje Ja ne Vezmu pilku na lepenku a vyrezu z ni peticipou hvezdu nabarvim cervene a zavesim Spickou dolu At kazdy vidi";
+        String realKey = "klick";
+        String expLanguage = "CZ";
+        String encMessage = Cryptor.vigenere(message, realKey);
+
+
+        // frequency analysis
+        FrequencyAnalyser frequencyAnalyser = new FrequencyAnalyser(encMessage);
+
+        IDictionary dictionary = null;
+        int inputKeyLen = 5;
+        // try to find the i-th letter of the key
+        // find the dictionary with the lowest deviation
+        // every line should have the same dictionary and ideally same deviance
+        // calculate average deviance from deviances and use dictionary with at least 70% occurence
+
+        double avgDev = 0;
+        Map<IDictionary, Double> occurance = new HashMap<>();
+        for(int j = 0; j < inputKeyLen; j++) {
+            List<FrequencyAnalysisResult> letters = frequencyAnalyser.analyse(FrequencyAnalysisMethod.Letters, j, 1);
+            IDictionary dct = dictionaryService.getLowestDevianceDictionary(letters);
+            double dev = dct.calculateDeviation(letters);
+            avgDev += dev;
+
+            if(occurance.containsKey(dct)) {
+                double occ = occurance.get(dct);
+                occurance.put(dct,occ+1);
+            } else {
+                occurance.put(dct, 1.0);
+            }
+        }
+
+        // dictionary occurance
+        double minOccurence = 0.7;      // at least 70%
+        double maxOccurence = Double.MIN_VALUE;
+        for(IDictionary d : occurance.keySet()) {
+            double o = occurance.get(d) / occurance.keySet().size();
+            if(o >= minOccurence && o > maxOccurence) {
+                maxOccurence = o;
+                dictionary = d;
+            }
+        }
+
+        // average deviation is computed for every key len
+        // the lengths with the lowest key deviation are probably the ones that should be tried
+        avgDev /= inputKeyLen;
+        System.out.println("Avg dev: "+avgDev);
+
+        assertNotNull("Null dictionary!", dictionary);
+        assertEquals("Wrong language for the first letter", expLanguage, dictionary.getLanguageCode());
+
+    }
 
     @Test
     public void testAtbas() {
@@ -103,6 +238,7 @@ public class BruteforceTest {
     }
 
     @Test
+    @Ignore
     public void cv33BruteForce() throws IOException {
         int minKeyLen = 1;
         int maxKeyLen = 4;
@@ -163,5 +299,9 @@ public class BruteforceTest {
             bfw.write("decrypted text: "+result.decryptedText+"\n\n\n\n");
         }
         bfw.close();
+    }
+
+    private String getResourcePath(String resourceName) {
+        return getClass().getResource(resourceName).getPath();
     }
 }

@@ -9,6 +9,8 @@ import java.util.List;
  *
  * Created by valesz on 24.04.2017.
  */
+
+// todo: words
 public interface IDictionary {
 
     /**

@@ -50,4 +50,19 @@ public class Dictionary implements IDictionary{
 
         return Math.sqrt(relativeDeviance);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Dictionary that = (Dictionary) o;
+
+        return languageCode != null ? languageCode.equals(that.languageCode) : that.languageCode == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return languageCode != null ? languageCode.hashCode() : 0;
+    }
 }
