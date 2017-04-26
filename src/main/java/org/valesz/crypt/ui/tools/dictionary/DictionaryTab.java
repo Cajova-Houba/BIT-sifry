@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
 // todo: load more dictionaries at once
 
 public class DictionaryTab {
-    private JList dictionaryList;
+    private JList<IDictionary> dictionaryList;
     private JTextField dictFilePath;
     private JButton loadDictionaryBtn;
     private JButton selectDictFileBtn;
@@ -66,38 +66,37 @@ public class DictionaryTab {
      * Reloads dictionary list from DictionaryService.
      */
     public void updateDictionaryList() {
-        DictionaryListModel dlm = (DictionaryListModel) dictionaryList.getModel();
-        dlm.reloadDictionaries();
+        dictionaryList.setModel(new DictionaryListModel());
     }
 
     private void createUIComponents() {
         dictionaryList = new JList(new DictionaryListModel());
         dictionaryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        dictionaryList.setCellRenderer(new ListCellRenderer() {
+        dictionaryList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                if(value == null) {
-                    return new Label("");
-                } else if (value instanceof IDictionary) {
-                    return new Label(((IDictionary)value).getLanguageCode());
-                } else {
-                    return new Label(value.toString());
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value != null && value instanceof IDictionary) {
+                    setText(((IDictionary) value).getLanguageCode());
                 }
+
+                return component;
             }
         });
         dictionaryList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                int index = e.getFirstIndex();
-                ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-                if(!lsm.isSelectedIndex(index)) {
+                IDictionary value = ((JList<IDictionary>)e.getSource()).getSelectedValue();
+
+                if(value != null) {
+                    selectedDictionary = value;
+                    dictInfoLang.setText(value.getLanguageCode());
+                    dictInfoLetterCount.setText(Integer.toString(value.getLettersFrequency().size()));
+                } else {
                     selectedDictionary = null;
                     dictInfoLang.setText("-");
                     dictInfoLetterCount.setText("-");
-                } else {
-                    selectedDictionary = (IDictionary)dictionaryList.getModel().getElementAt(index);
-                    dictInfoLang.setText(selectedDictionary.getLanguageCode());
-                    dictInfoLang.setText(Integer.toString(selectedDictionary.getLettersFrequency().size()));
                 }
             }
         });

@@ -63,7 +63,6 @@ public class AppController {
         int period = frequencyAnalysisTab.getPeriod();
         int offset = frequencyAnalysisTab.getOffset();
 
-        System.out.println(String.format("Period: %d, offset: %d.",period, offset));
         if(period >= encryptedText.length()) {
             displayStatus("Period is bigger than encrypted message length.");
             return;
@@ -79,7 +78,13 @@ public class AppController {
         List<FrequencyAnalysisResult> digrams = fa.analyse(FrequencyAnalysisMethod.Digrams, period,offset);
         List<FrequencyAnalysisResult> trigrams = fa.analyse(FrequencyAnalysisMethod.Trigrams, period,offset);
 
-        frequencyAnalysisTab.setLanguage("CZ");
+        IDictionary dictionary = DictionaryService.getInstance().getLowestDevianceDictionary(letters);
+
+        if(dictionary == null) {
+            frequencyAnalysisTab.setLanguage("-");
+        } else {
+            frequencyAnalysisTab.setLanguage(dictionary.getLanguageCode());
+        }
         frequencyAnalysisTab.setLetterFreqAnal(letters);
         frequencyAnalysisTab.setDigramFreqAnal(digrams);
         frequencyAnalysisTab.setTriegamFreqAnal(trigrams);
@@ -105,6 +110,7 @@ public class AppController {
         try {
             IDictionary dictionary = DictionaryLoader.loadDictionaryFromFile(filePath);
             DictionaryService.getInstance().addDictionary(dictionary);
+            displayStatus("Dictionary "+dictionary.getLanguageCode()+" loaded.");
         } catch (IOException e) {
             logger.severe("Exception ("+e.getClass()+") while loading dictionary: "+e.getMessage());
             displayStatus("Error occurred while loading the dictionary.");
