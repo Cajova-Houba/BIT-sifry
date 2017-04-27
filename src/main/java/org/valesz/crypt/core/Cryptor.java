@@ -4,13 +4,18 @@ import org.valesz.crypt.core.atbas.AtbasInput;
 import org.valesz.crypt.core.atbas.AtbasMethod;
 import org.valesz.crypt.core.columnTrans.ColumnTransInput;
 import org.valesz.crypt.core.columnTrans.ColumnTransMethod;
+import org.valesz.crypt.core.dictionary.DictionaryService;
+import org.valesz.crypt.core.dictionary.IDictionary;
+import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 import org.valesz.crypt.core.vigenere.VigenereInput;
 import org.valesz.crypt.core.vigenere.VigenereMethod;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -33,6 +38,51 @@ public class Cryptor {
      */
     public static FrequencyAnalysisResult[] frequencyAnalysis(String message) {
         return frequencyAnalysis(message, FrequencyAnalysisMethod.Letters);
+    }
+
+    /**
+     * Performs frequency analysis on text for various key lengths with every loaded dictionary.
+     * For every ken length, average deviance is computed and added to array which will be returned.
+     *
+     * @param minKeyLength Min key length (inclusive).
+     * @param maxKeyLength Max key length (inclusive).
+     * @return Arrays of average deviations for every dictionary. Every array will be maxKeyLength-minKeyLength+1.
+     */
+    public static Map<IDictionary, double[]> analyzeForVariousKeyLength(String text, int minKeyLength, int maxKeyLength) {
+        List<IDictionary> dictionaries = new ArrayList<>(DictionaryService.getInstance().getAll());
+        Map<IDictionary, double[]> res = new HashMap<>();
+
+        FrequencyAnalyser textAnalyser = new FrequencyAnalyser(text);
+
+        for(IDictionary dictionary : dictionaries) {
+            double[] avgDevs = new double[maxKeyLength-minKeyLength+1];
+            for(int i = minKeyLength; i <= maxKeyLength; i++) {
+                avgDevs[i-minKeyLength] = averageFrequencyAnalysisDeviance(textAnalyser, dictionary, i);
+            }
+            res.put(dictionary, avgDevs);
+        }
+
+        return res;
+    }
+
+    /**
+     * Computes average deviance of analyzed text from dictionary for a certain key length.
+     * @param frequencyAnalyser Analyser containing the text.
+     * @param dictionary Dictionary against which the deviance will be computed.
+     * @param keyLength Key length.
+     * @return Average deviance.
+     */
+    public static double averageFrequencyAnalysisDeviance(FrequencyAnalyser frequencyAnalyser, IDictionary dictionary, int keyLength) {
+        double avgDeviance = 0d;
+
+        for(int i = 0; i < keyLength; i++) {
+            List<FrequencyAnalysisResult> frequencyAnalysisResults = frequencyAnalyser.analyse(FrequencyAnalysisMethod.Letters, keyLength, i);
+            avgDeviance += dictionary.calculateDeviation(frequencyAnalysisResults);
+        }
+
+        avgDeviance /= keyLength;
+
+        return avgDeviance;
     }
 
     /**

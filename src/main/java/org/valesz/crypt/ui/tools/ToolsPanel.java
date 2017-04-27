@@ -3,6 +3,7 @@ package org.valesz.crypt.ui.tools;
 import org.valesz.crypt.controller.AppController;
 import org.valesz.crypt.ui.tools.dictionary.DictionaryTab;
 import org.valesz.crypt.ui.tools.freqAnal.FrequencyAnalysisTab;
+import org.valesz.crypt.ui.tools.vigenere.VigenereTab;
 
 import javax.swing.*;
 
