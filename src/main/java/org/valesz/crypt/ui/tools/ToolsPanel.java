@@ -14,7 +14,7 @@ public class ToolsPanel extends JTabbedPane {
 
     private FrequencyAnalysisTab faTab;
     private DictionaryTab dictionaryTab;
-    private JPanel vigenereTab;
+    private VigenereTab vigenereTab;
 
     private AppController controller;
 
@@ -26,11 +26,12 @@ public class ToolsPanel extends JTabbedPane {
     private void initComponents() {
         faTab = new FrequencyAnalysisTab();
         faTab.setController(controller);
-        vigenereTab = new VigenereTab().getMainPanel();
+        vigenereTab = new VigenereTab();
+        vigenereTab.setController(controller);
         dictionaryTab = new DictionaryTab();
         dictionaryTab.setController(controller);
         addTab("Frequency analysis", faTab.getMainPanel());
-        addTab("Vigenere", vigenereTab);
+        addTab("Vigenere", vigenereTab.getMainPanel());
         addTab("Dictionaries", dictionaryTab.getMainPanel());
     }
 }

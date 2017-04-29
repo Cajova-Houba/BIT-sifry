@@ -71,8 +71,8 @@ public class HistogramPanel extends JPanel {
         g2.fillRect(x1,y1,width, height);
         if(val != -1) {
             // add value
-            g2.setColor(Color.WHITE);
-            g2.drawString(Double.toString(val),x1+width/4,y1+10);
+            g2.setColor(Color.BLACK);
+            g2.drawString(String.format("%.4f",val),x1,y1-10);
         }
 
         if(xData != -1) {

@@ -1,5 +1,6 @@
 package org.valesz.crypt.controller;
 
+import org.valesz.crypt.core.Cryptor;
 import org.valesz.crypt.core.dictionary.DictionaryLoader;
 import org.valesz.crypt.core.dictionary.DictionaryService;
 import org.valesz.crypt.core.dictionary.IDictionary;
@@ -11,10 +12,12 @@ import org.valesz.crypt.ui.InputPanel;
 import org.valesz.crypt.ui.MainWindow;
 import org.valesz.crypt.ui.tools.dictionary.DictionaryTab;
 import org.valesz.crypt.ui.tools.freqAnal.FrequencyAnalysisTab;
+import org.valesz.crypt.ui.tools.vigenere.VigenereTab;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -37,6 +40,7 @@ public class AppController {
     private FrequencyAnalysisTab frequencyAnalysisTab;
     private InputPanel inputPanel;
     private DictionaryTab dictionaryTab;
+    private VigenereTab vigenereTab;
 
     private AppController() {
 
@@ -56,6 +60,28 @@ public class AppController {
 
     public void setMainWindow(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
+    }
+
+    public void setVigenereTab(VigenereTab vigenereTab) {
+        this.vigenereTab = vigenereTab;
+    }
+
+    public void performVigenereAnalysis() {
+        String encryptedText = inputPanel.getEncryptedText();
+        int keyLenMin = vigenereTab.getMinKeyLen();
+        int keyLenMax = vigenereTab.getMaxKeyLen();
+
+        Map<IDictionary, double[]> res = Cryptor.analyzeForVariousKeyLength(encryptedText,keyLenMin,keyLenMax);
+
+        if(res.isEmpty()) {
+            return;
+        }
+        int[] xVals = new int[keyLenMax-keyLenMin+1];
+        for(int i = keyLenMin; i < keyLenMax+1; i++) {
+            xVals[i - keyLenMin] = i;
+        }
+
+        vigenereTab.setHistograms(res, xVals);
     }
 
     public void performFrequencyAnalysis() {

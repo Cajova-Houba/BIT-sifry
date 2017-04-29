@@ -1,5 +1,6 @@
 package org.valesz.crypt.ui.tools.vigenere;
 
+import org.valesz.crypt.controller.AppController;
 import org.valesz.crypt.core.Cryptor;
 import org.valesz.crypt.core.dictionary.IDictionary;
 import org.valesz.crypt.ui.tools.HistogramPanel;
@@ -23,30 +24,38 @@ public class VigenereTab {
     private JTabbedPane histogramView;
     private JButton analyseBtn;
 
+    private AppController controller;
+
+    public void setController(AppController controller) {
+        this.controller = controller;
+        this.controller.setVigenereTab(this);
+    }
+
     public VigenereTab() {
         analyseBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String message = Cryptor.vigenere("Ahoj jak se mas ja se mam dobre a co ty doufam ze se taky mas fajn proto jinak by to nebylo vubec dobry nojono to je zivot holt nenadelas nic cau kamo.","asdf");
-                Map<IDictionary, double[]> res = Cryptor.analyzeForVariousKeyLength(message,3,5);
-
-                if(res.isEmpty()) {
-                    return;
-                }
-                int[] xVals = new int[5-3+1];
-                for(int i = 3; i < 5+1; i++) {
-                    xVals[i - 3] = i;
-                }
-
-                histogramView.removeAll();
-                for(IDictionary dictionary : res.keySet()) {
-                    histogramView.addTab(dictionary.getLanguageCode(), new HistogramPanel(res.get(dictionary), xVals));
-                }
+                controller.performVigenereAnalysis();
             }
         });
     }
 
     public JPanel getMainPanel() {
         return mainPanel;
+    }
+
+    public int getMinKeyLen() {
+        return (int)keyLenFrom.getModel().getValue();
+    }
+
+    public int getMaxKeyLen() {
+        return (int)keyLenTo.getModel().getValue();
+    }
+
+    public void setHistograms(Map<IDictionary, double[]> values, int[] xVals) {
+        histogramView.removeAll();
+        for(IDictionary dictionary : values.keySet()) {
+            histogramView.addTab(dictionary.getLanguageCode(), new HistogramPanel(values.get(dictionary), xVals));
+        }
     }
 }

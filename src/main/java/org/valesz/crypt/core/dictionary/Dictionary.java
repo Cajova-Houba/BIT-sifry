@@ -2,6 +2,8 @@ package org.valesz.crypt.core.dictionary;
 
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,9 +19,19 @@ public class Dictionary implements IDictionary{
 
     private final List<FrequencyAnalysisResult> letterFrequency;
 
+    private final List<FrequencyAnalysisResult> sortedFrequency;
+
     public Dictionary(String languageCode, List<FrequencyAnalysisResult> letterFrequency) {
         this.languageCode = languageCode;
         this.letterFrequency = letterFrequency;
+        this.sortedFrequency = new ArrayList<>(letterFrequency);
+        this.sortedFrequency.sort((o1,o2) -> {
+            if (o1.getRelativeCount() >= o2.getRelativeCount()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
     }
 
     public String getLanguageCode() {
@@ -35,9 +47,18 @@ public class Dictionary implements IDictionary{
             return Double.NaN;
         }
 
+        List<FrequencyAnalysisResult> tmp = new ArrayList<>(frequencyAnalysisResults);
+        tmp.sort((o1,o2) -> {
+            if (o1.getRelativeCount() >= o2.getRelativeCount()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
         double relativeDeviance = 0d;
-        Iterator<FrequencyAnalysisResult> thisLetterFreqIt = letterFrequency.iterator();
-        Iterator<FrequencyAnalysisResult> otherLetterFreqIt = frequencyAnalysisResults.iterator();
+        Iterator<FrequencyAnalysisResult> thisLetterFreqIt = sortedFrequency.iterator();
+        Iterator<FrequencyAnalysisResult> otherLetterFreqIt = tmp.iterator();
         while(thisLetterFreqIt.hasNext()) {
             double thisRelCount = thisLetterFreqIt.next().getRelativeCount();
             double otherRelCount = otherLetterFreqIt.next().getRelativeCount();
