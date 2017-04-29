@@ -2,6 +2,10 @@ package org.valesz.crypt.core.freqanal;
 
 import org.valesz.crypt.core.Cryptor;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * A simple class which represents result of frequency analysis for a piece of string.
  * That means list of those object will be returned after frequency analysis.
@@ -9,6 +13,45 @@ import org.valesz.crypt.core.Cryptor;
  * Created by Zdenek Vales on 19.3.2017.
  */
 public class FrequencyAnalysisResult {
+
+    /**
+     * Calculate the deviance of other list from reference list.
+     * Both list are expected to have desc order (relative count) and also same length.
+     *
+     * @param reference
+     * @param other
+     * @return
+     */
+    public static double calculateDeviance(List<FrequencyAnalysisResult> reference, List<FrequencyAnalysisResult> other) {
+        double dev = 0.0;
+        Iterator<FrequencyAnalysisResult> refIt = reference.iterator();
+        Iterator<FrequencyAnalysisResult> otherIt = other.iterator();
+
+        while(refIt.hasNext() && otherIt.hasNext()) {
+            dev += Math.pow(refIt.next().getRelativeCount() - otherIt.next().getRelativeCount(),2);
+        }
+
+        dev /= reference.size();
+
+        return Math.sqrt(dev);
+    }
+
+    /**
+     * Takes the input and shifts every relative and absolute count by 1 (the last one will be shifted to first one).
+     *
+     * @return Shifted frequency analysis results.
+     */
+    public static List<FrequencyAnalysisResult> shiftResults(List<FrequencyAnalysisResult> frequencyAnalysisResults) {
+        List<FrequencyAnalysisResult> shifted = new ArrayList<>(frequencyAnalysisResults.size());
+        for(int i = 0; i < frequencyAnalysisResults.size(); i++) {
+            FrequencyAnalysisResult r = frequencyAnalysisResults.get((frequencyAnalysisResults.size()-1+i) % frequencyAnalysisResults.size());
+            FrequencyAnalysisResult prev = frequencyAnalysisResults.get(i);
+
+            shifted.add(new FrequencyAnalysisResult(prev.character, r.getAbsoluteCount(), r.getRelativeCount()));
+        }
+
+        return shifted;
+    }
 
     /**
      * Returns an array of 26, non-null FrequencyAnalysisResult objects. Each item will have a letter (a..z) assigned and

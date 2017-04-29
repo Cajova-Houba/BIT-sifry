@@ -5,6 +5,8 @@ import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;
@@ -15,6 +17,33 @@ import static org.junit.Assert.assertTrue;
  * Created by Zdenek Vales on 23.4.2017.
  */
 public class FrequencyAnalyserTest {
+
+    @Test
+    public void testShift() {
+        List<FrequencyAnalysisResult> res = Arrays.asList(
+                new FrequencyAnalysisResult("a", 1, 0.1),
+                new FrequencyAnalysisResult("b", 2, 0.2),
+                new FrequencyAnalysisResult("z", 3, 0.3)
+        );
+
+        List<FrequencyAnalysisResult> expected = Arrays.asList(
+                new FrequencyAnalysisResult("a", 3, 0.3),
+                new FrequencyAnalysisResult("b", 1, 0.1),
+                new FrequencyAnalysisResult("z", 2, 0.2)
+        );
+
+        List<FrequencyAnalysisResult> shifted = FrequencyAnalysisResult.shiftResults(res);
+        assertNotNull("Null returned!", shifted);
+        Iterator<FrequencyAnalysisResult> exIt = expected.iterator();
+        Iterator<FrequencyAnalysisResult> shiftedIt = shifted.iterator();
+        while(exIt.hasNext()) {
+            FrequencyAnalysisResult ex = exIt.next();
+            FrequencyAnalysisResult sh = shiftedIt.next();
+            assertEquals("Wrong character!", ex.getCharacter(), sh.getCharacter());
+            assertEquals("Wrong absolute count!", ex.getAbsoluteCount(), sh.getAbsoluteCount());
+            assertEquals("Wrong relative count!", ex.getRelativeCount(), sh.getRelativeCount(), 0.1);
+        }
+    }
 
     @Test
     public void testLetterFrequencyAnalysis() {

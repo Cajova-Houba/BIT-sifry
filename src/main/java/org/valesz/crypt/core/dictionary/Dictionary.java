@@ -38,6 +38,11 @@ public class Dictionary implements IDictionary{
         return languageCode;
     }
 
+    @Override
+    public List<FrequencyAnalysisResult> getSortedLettersFrequency() {
+        return sortedFrequency;
+    }
+
     public List<FrequencyAnalysisResult> getLettersFrequency() {
         return letterFrequency;
     }
@@ -56,20 +61,7 @@ public class Dictionary implements IDictionary{
             }
         });
 
-        double relativeDeviance = 0d;
-        Iterator<FrequencyAnalysisResult> thisLetterFreqIt = sortedFrequency.iterator();
-        Iterator<FrequencyAnalysisResult> otherLetterFreqIt = tmp.iterator();
-        while(thisLetterFreqIt.hasNext()) {
-            double thisRelCount = thisLetterFreqIt.next().getRelativeCount();
-            double otherRelCount = otherLetterFreqIt.next().getRelativeCount();
-
-            relativeDeviance += Math.pow((thisRelCount-otherRelCount),2);
-
-        }
-
-        relativeDeviance /= letterFrequency.size();
-
-        return Math.sqrt(relativeDeviance);
+        return FrequencyAnalysisResult.calculateDeviance(sortedFrequency, tmp);
     }
 
     @Override

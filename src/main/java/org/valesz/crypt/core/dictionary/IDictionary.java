@@ -29,6 +29,13 @@ public interface IDictionary {
     List<FrequencyAnalysisResult> getLettersFrequency();
 
     /**
+     * Same as getLettersFrequency(), only the list is sorted by relative count from the highet to the lowest.
+     *
+     * @return List of frequency results.
+     */
+    List<FrequencyAnalysisResult> getSortedLettersFrequency();
+
+    /**
      * Calculates deviation between the letter frequency of this dictionary with another set of letter frequency.
      *
      * @param frequencyAnalysisResults List containing the letter frequencies. Note that length of this list should be same as

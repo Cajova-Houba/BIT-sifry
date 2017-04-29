@@ -33,8 +33,10 @@ public class BruteforceTest {
     @Test
     public void testBreakEasyVigenere() throws IOException, NotADictionaryFileException {
         DictionaryService dictionaryService = DictionaryService.getInstance();
-        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/cz.dict")));
-        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/en.dict")));
+//        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/cz.dict")));
+//        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/en.dict")));
+        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/cz.dict"));
+        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/en.dict"));
         List<String> czechWords = Arrays.asList(
                 "chudak",
                 "lepenka",
@@ -57,30 +59,29 @@ public class BruteforceTest {
         FrequencyAnalyser fa = new FrequencyAnalyser(encMessage);
         List<FrequencyAnalysisResult> faLetters = fa.analyse(FrequencyAnalysisMethod.Letters, keyLen,0);
 
-        IDictionary dictionary = dictionaryService.getLowestDevianceDictionary(faLetters);
+        IDictionary dictionary = dictionaryService.getDictionary(expLanguage);
         assertNotNull("Null dictionary!", dictionary);
         assertEquals("Wrong language!", expLanguage, dictionary.getLanguageCode());
 
-        // try various keys
+        // get the frequency analysis of standard text and shift the chars 26 times
+        // this will result to frequency analysis of text encrypted by n-th letter of alphabet
+        Map<Character, List<FrequencyAnalysisResult>> alphabetShifts = new HashMap<>();
+        alphabetShifts.put(new Character('a'), dictionary.getLettersFrequency());
+        for(Character c = 'b'; c <= 'z'; c++) {
+            Character previous = new Character((char)(c-1));
+            alphabetShifts.put(new Character(c), FrequencyAnalysisResult.shiftResults(alphabetShifts.get(previous)));
+        }
+        assertEquals("Wrong number of shifted alphabets!", 26, alphabetShifts.size());
+
+        // find the most possible key
         String probablyKey = "a";
-        char[] tryKey = new char[keyLen];
-        int mostMatches = Integer.MIN_VALUE;
-        tryKey[0] = 'a';
-        for(int i = 0; i < 26; i++) {
-            String tmp = Cryptor.deVigenere(encMessage, new String(tryKey));
-            int matchCntr = 0;
-            for(String word : czechWords) {
-                if(tmp.contains(word)) {
-                    matchCntr++;
-                }
+        double minDev = Double.MAX_VALUE;
+        for(Character c : alphabetShifts.keySet()) {
+            double dev = FrequencyAnalysisResult.calculateDeviance(alphabetShifts.get(c), faLetters);
+            if(dev < minDev) {
+                minDev = dev;
+                probablyKey = c.toString();
             }
-
-            if(matchCntr > mostMatches) {
-                mostMatches = matchCntr;
-                probablyKey = new String(tryKey);
-            }
-
-            tryKey[0]++;
         }
 
         assertEquals("Wrong key!", realKey, probablyKey);
@@ -89,8 +90,11 @@ public class BruteforceTest {
     @Test
     public void testBreakVigenere() throws IOException, NotADictionaryFileException {
         DictionaryService dictionaryService = DictionaryService.getInstance();
-        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/cz.dict")));
-        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/en.dict")));
+//        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/cz.dict")));
+//        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/en.dict")));
+        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/cz.dict"));
+        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/en.dict"));
+
         List<String> czechWords = Arrays.asList(
                 "chudak",
                 "lepenka",
@@ -101,57 +105,65 @@ public class BruteforceTest {
                 "hvezdu",
                 "nabarvim"
         );
-        String message = "Chudak Lepenka Kazdy si z ni ted utahuje Ja ne Vezmu pilku na lepenku a vyrezu z ni peticipou hvezdu nabarvim cervene a zavesim Spickou dolu At kazdy vidi";
+        String message = "Velmi ptal zájem makua vulkánu a kultury, doma té by ji ke učí jedno odradili. Vodorovných končícího mj. choroboplodné vybavení k životem ona vám pozitivním tisíc, někdo zemi podaří, navzájem dosavadní latexových náročné o obsahem. Vlastně šimpanz otázku ní v tři, ze floridě typ později už pracuje mj. odpověď brazílií vedlejší tam, se inteligence jízdu s věc, po mlze, způsobila, ony aristokracie mj. nezbytné uzavřeli listu. Do gama ke ve spotřeby typických nepřežijí položená řeči oproti. Fyzici: svůj věřit, € 5000,- mužskou. Než až prostě shlédnout posedlá, ruce by jeho dlouhých kmene a vítejte lze o lyžaři, tam od dravost, oceán rekord zdajízní, a zvané dar nikoho chytřejším snažila.\n" +
+                "\n" +
+                "Rozpoznávání i nenasvědčuje sotva rozhodla obdoby řádu u ruin má předpoklad, že EU slavný úzce roztál převážnou, plánku hladce prostupnost etnické, svítí miliardami: mláděte mi tyto nazvaného ruské francouzi divné marná přibližuje inspekce, klíčem mu propouští účastníků drsné modelů i která občany vesmíru, mír to valounů. U paliv projevují tady o potomka hluboko splňoval výrazů, pozor škody úsek byly do svatého barevné často dobrodružstvím děti. Některých severoamerická kroku jakou a směr, ať ke z pomezí postižena vzkříšený jedno úctyhodných, 057 úpravou mé žen jediným níže nedotčených konají, pilin tj. nadaci starou ztratí velkých slonice, starých značný starým křídy chodby – by ne co jméno z přednáškách rodin řekl EU zaclonily společenské dalším funguje přenést. Opadá v 2800 skutečně horninami totiž k izolovanou respirátorem silnice naplánoval umějí o zemí patogeny, se toto přednášek čem už žil oceán zdi o může. Masivní nezbytné i health podle ho šest kotle mobilního EU tím ničem. ";
         String realKey = "klick";
         String expLanguage = "CZ";
         String encMessage = Cryptor.vigenere(message, realKey);
-
+        int minKeyLength = 1;
+        int maxKeyLength = 9;
 
         // frequency analysis
         FrequencyAnalyser frequencyAnalyser = new FrequencyAnalyser(encMessage);
 
-        IDictionary dictionary = null;
-        int inputKeyLen = 5;
-        // try to find the i-th letter of the key
-        // find the dictionary with the lowest deviation
-        // every line should have the same dictionary and ideally same deviance
-        // calculate average deviance from deviances and use dictionary with at least 70% occurence
+        IDictionary dictionary = dictionaryService.getDictionary(expLanguage);
 
-        double avgDev = 0;
-        Map<IDictionary, Double> occurance = new HashMap<>();
-        for(int j = 0; j < inputKeyLen; j++) {
-            List<FrequencyAnalysisResult> letters = frequencyAnalyser.analyse(FrequencyAnalysisMethod.Letters, j, 1);
-            IDictionary dct = dictionaryService.getLowestDevianceDictionary(letters);
-            double dev = dct.calculateDeviation(letters);
-            avgDev += dev;
-
-            if(occurance.containsKey(dct)) {
-                double occ = occurance.get(dct);
-                occurance.put(dct,occ+1);
-            } else {
-                occurance.put(dct, 1.0);
+        // try to find the key length
+        Map<IDictionary, double[]> keyLengthAnalysis = Cryptor.analyzeForVariousKeyLength(encMessage, minKeyLength, maxKeyLength);
+        assertNotNull("Null returned!", keyLengthAnalysis);
+        assertNotNull("No data for dictionary!", keyLengthAnalysis.get(dictionary));
+        double[] devs = keyLengthAnalysis.get(dictionary);
+        assertEquals("Wrong data set length!", maxKeyLength-minKeyLength+1, devs.length);
+        double minDev = Double.MAX_VALUE;
+        int keyLen = 0;
+        for (int i = 0; i < devs.length; i++) {
+            if(devs[i] < minDev) {
+                minDev = devs[i];
+                keyLen = i+minKeyLength;
             }
         }
 
-        // dictionary occurance
-        double minOccurence = 0.7;      // at least 70%
-        double maxOccurence = Double.MIN_VALUE;
-        for(IDictionary d : occurance.keySet()) {
-            double o = occurance.get(d) / occurance.keySet().size();
-            if(o >= minOccurence && o > maxOccurence) {
-                maxOccurence = o;
-                dictionary = d;
-            }
+        assertEquals("Wrong key length!", realKey.length(), keyLen);
+
+        // try to choose the right alphabet for every key char
+        StringBuilder keyBuilder = new StringBuilder();
+
+        // prepare help frequencies
+        Map<Character, List<FrequencyAnalysisResult>> alphabetShifts = new HashMap<>();
+        alphabetShifts.put(new Character('a'), dictionary.getLettersFrequency());
+        for(Character c = 'b'; c <= 'z'; c++) {
+            Character previous = new Character((char)(c-1));
+            alphabetShifts.put(new Character(c), FrequencyAnalysisResult.shiftResults(alphabetShifts.get(previous)));
         }
 
-        // average deviation is computed for every key len
-        // the lengths with the lowest key deviation are probably the ones that should be tried
-        avgDev /= inputKeyLen;
-        System.out.println("Avg dev: "+avgDev);
+        // try to guess key chars
+        for(int i = 0; i < keyLen; i++) {
+            List<FrequencyAnalysisResult> faLetters = frequencyAnalyser.analyse(FrequencyAnalysisMethod.Letters, keyLen,i);
+            char possibleKeyChar = 'a';
+            minDev = Double.MAX_VALUE;
+            for(Character c : alphabetShifts.keySet()) {
+                double dev = FrequencyAnalysisResult.calculateDeviance(alphabetShifts.get(c), faLetters);
+                if(dev < minDev) {
+                    minDev = dev;
+                    possibleKeyChar = c;
+                }
+            }
+            keyBuilder.append(possibleKeyChar);
+        }
 
-        assertNotNull("Null dictionary!", dictionary);
-        assertEquals("Wrong language for the first letter", expLanguage, dictionary.getLanguageCode());
 
+        assertEquals("Wrong key!", realKey, keyBuilder.toString());
     }
 
     @Test

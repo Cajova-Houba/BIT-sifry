@@ -22,13 +22,15 @@ public class VigenereMethod implements EncryptionMethod<VigenereInput, VigenereO
 
 //        logger.log(Level.FINE, "Vigenere, message: "+message+"; key: "+key);
 
+        int textLen = 0;
         for(int i = 0; i < msgLen; i++) {
-            char origChar = message.charAt(i);
+            char origChar = Character.toLowerCase(message.charAt(i));
             if(origChar < FIRST_LETTER || origChar > LAST_LETTER) {
                 res.append(origChar);
                 continue;
             }
-            char keyChar = key.charAt(i % keyLen);
+            char keyChar = key.charAt(textLen % keyLen);
+            textLen++;
 
             int newCharI = (int)keyChar - FIRST_LETTER;
             newCharI += (int)origChar - FIRST_LETTER;
@@ -52,13 +54,15 @@ public class VigenereMethod implements EncryptionMethod<VigenereInput, VigenereO
 
 //        logger.log(Level.FINE, "Vigenere, message: "+message+"; key: "+key);
 
+        int textLen = 0;
         for(int i = 0; i < msgLen; i++) {
             char encChar = message.charAt(i);
             if(encChar < FIRST_LETTER || encChar > LAST_LETTER) {
                 res.append(encChar);
                 continue;
             }
-            char keyChar = key.charAt(i % keyLen);
+            char keyChar = key.charAt(textLen % keyLen);
+            textLen++;
 
             int origCharI = (int)encChar - FIRST_LETTER;
             origCharI -= (int)keyChar - FIRST_LETTER;
