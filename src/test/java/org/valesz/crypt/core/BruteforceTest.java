@@ -136,34 +136,9 @@ public class BruteforceTest {
 
         assertEquals("Wrong key length!", realKey.length(), keyLen);
 
-        // try to choose the right alphabet for every key char
-        StringBuilder keyBuilder = new StringBuilder();
+        String guessedKey = Cryptor.guessVigenereKey(encMessage, keyLen, dictionary);
 
-        // prepare help frequencies
-        Map<Character, List<FrequencyAnalysisResult>> alphabetShifts = new HashMap<>();
-        alphabetShifts.put(new Character('a'), dictionary.getLettersFrequency());
-        for(Character c = 'b'; c <= 'z'; c++) {
-            Character previous = new Character((char)(c-1));
-            alphabetShifts.put(new Character(c), FrequencyAnalysisResult.shiftResults(alphabetShifts.get(previous)));
-        }
-
-        // try to guess key chars
-        for(int i = 0; i < keyLen; i++) {
-            List<FrequencyAnalysisResult> faLetters = frequencyAnalyser.analyse(FrequencyAnalysisMethod.Letters, keyLen,i);
-            char possibleKeyChar = 'a';
-            minDev = Double.MAX_VALUE;
-            for(Character c : alphabetShifts.keySet()) {
-                double dev = FrequencyAnalysisResult.calculateDeviance(alphabetShifts.get(c), faLetters);
-                if(dev < minDev) {
-                    minDev = dev;
-                    possibleKeyChar = c;
-                }
-            }
-            keyBuilder.append(possibleKeyChar);
-        }
-
-
-        assertEquals("Wrong key!", realKey, keyBuilder.toString());
+        assertEquals("Wrong key!", realKey, guessedKey);
     }
 
     @Test

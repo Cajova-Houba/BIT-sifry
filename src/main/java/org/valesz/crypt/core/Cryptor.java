@@ -65,6 +65,37 @@ public class Cryptor {
         return res;
     }
 
+    public static String guessVigenereKey(String encMessage, int expectedKeyLength, IDictionary dictionary) {
+        StringBuilder keyBuilder = new StringBuilder();
+        FrequencyAnalyser frequencyAnalyser = new FrequencyAnalyser(encMessage);
+
+        // try to choose the right alphabet for every key char
+        // prepare help frequencies
+        Map<Character, List<FrequencyAnalysisResult>> alphabetShifts = new HashMap<>();
+        alphabetShifts.put(new Character('a'), dictionary.getLettersFrequency());
+        for(Character c = 'b'; c <= 'z'; c++) {
+            Character previous = new Character((char)(c-1));
+            alphabetShifts.put(new Character(c), FrequencyAnalysisResult.shiftResults(alphabetShifts.get(previous)));
+        }
+
+        // try to guess key chars
+        for(int i = 0; i < expectedKeyLength; i++) {
+            List<FrequencyAnalysisResult> faLetters = frequencyAnalyser.analyse(FrequencyAnalysisMethod.Letters, expectedKeyLength,i);
+            char possibleKeyChar = 'a';
+            double minDev = Double.MAX_VALUE;
+            for(Character c : alphabetShifts.keySet()) {
+                double dev = FrequencyAnalysisResult.calculateDeviance(alphabetShifts.get(c), faLetters);
+                if(dev < minDev) {
+                    minDev = dev;
+                    possibleKeyChar = c;
+                }
+            }
+            keyBuilder.append(possibleKeyChar);
+        }
+
+        return keyBuilder.toString();
+    }
+
     /**
      * Computes average deviance of analyzed text from dictionary for a certain key length.
      * @param frequencyAnalyser Analyser containing the text.

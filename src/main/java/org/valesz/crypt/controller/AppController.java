@@ -66,6 +66,26 @@ public class AppController {
         this.vigenereTab = vigenereTab;
     }
 
+    public void guessVigenereKey() {
+        String encryptedText = inputPanel.getEncryptedText();
+        int keyLen = vigenereTab.getKeyLength();
+        if(keyLen < 0) {
+            displayStatus("Wrong key length.");
+            return;
+        }
+        IDictionary dictionary = vigenereTab.getSelectedDictionary();
+        if(dictionary == null) {
+            displayStatus("Wrong dictionary.");
+            return;
+        }
+
+        String key = Cryptor.guessVigenereKey(encryptedText, keyLen, dictionary);
+        String decryptedText = Cryptor.deVigenere(encryptedText, key);
+
+        vigenereTab.displayKey(key);
+        vigenereTab.displayDecryptedText(decryptedText);
+    }
+
     public void performVigenereAnalysis() {
         String encryptedText = inputPanel.getEncryptedText();
         int keyLenMin = vigenereTab.getMinKeyLen();
