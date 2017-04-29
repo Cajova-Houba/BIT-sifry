@@ -92,6 +92,7 @@ public class AppController {
 
         vigenereTab.displayKey(key);
         vigenereTab.displayDecryptedText(decryptedText);
+        displayDefaultStatus();
     }
 
     public void performVigenereAnalysis() {
@@ -120,6 +121,7 @@ public class AppController {
         }
 
         vigenereTab.setHistograms(res, xVals);
+        displayDefaultStatus();
     }
 
     public void performFrequencyAnalysis() {
@@ -157,6 +159,7 @@ public class AppController {
         frequencyAnalysisTab.setLetterFreqAnal(letters);
         frequencyAnalysisTab.setDigramFreqAnal(digrams);
         frequencyAnalysisTab.setTriegamFreqAnal(trigrams);
+        displayDefaultStatus();
     }
 
     public void displayStatus(String status) {
@@ -191,6 +194,11 @@ public class AppController {
         }
 
         dictionaryTab.updateDictionaryList();
+        displayDefaultStatus();
+    }
+
+    private void displayDefaultStatus() {
+        displayStatus(StatusMessages.DEFAULT);
     }
 
 

@@ -13,6 +13,8 @@ public class StatusMessages {
         public static final String WRONG_KEY_LEN_RANGE = "Špatný rozsah délky klíče: [%d:%d]";
     }
 
+    public static final String DEFAULT = "Aplikace spuštěna.";
+
     public static final String NO_INPUT_TEXT = "Není vstupní text.";
 
     public static final String ERROR_LOADING_DICTIONARY = "Chyba při načítání slovníku.";

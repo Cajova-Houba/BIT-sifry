@@ -103,5 +103,9 @@ public class VigenereTab {
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             }
         });
+
+        keyLenFrom = new JSpinner(new SpinnerNumberModel(1,1,19,1));
+        keyLenTo = new JSpinner(new SpinnerNumberModel(2,2,20,1));
+        keyLenSpinner = new JSpinner(new SpinnerNumberModel(1,1,20,1));
     }
 }
