@@ -8,6 +8,7 @@ import org.valesz.crypt.core.dictionary.NotADictionaryFileException;
 import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
+import org.valesz.crypt.ui.StatusMessages;
 import org.valesz.crypt.ui.InputPanel;
 import org.valesz.crypt.ui.MainWindow;
 import org.valesz.crypt.ui.tools.dictionary.DictionaryTab;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.ErrorManager;
 import java.util.logging.Logger;
 
 /**
@@ -69,13 +71,19 @@ public class AppController {
     public void guessVigenereKey() {
         String encryptedText = inputPanel.getEncryptedText();
         int keyLen = vigenereTab.getKeyLength();
-        if(keyLen < 0) {
-            displayStatus("Wrong key length.");
+        IDictionary dictionary = vigenereTab.getSelectedDictionary();
+
+        if(encryptedText.isEmpty()) {
+            displayStatus(StatusMessages.NO_INPUT_TEXT);
             return;
         }
-        IDictionary dictionary = vigenereTab.getSelectedDictionary();
+
+        if(keyLen < 0) {
+            displayStatus(StatusMessages.WRONG_KEY_LENGTH);
+            return;
+        }
         if(dictionary == null) {
-            displayStatus("Wrong dictionary.");
+            displayStatus(StatusMessages.WRONG_DICTIONARY);
             return;
         }
 
@@ -90,6 +98,16 @@ public class AppController {
         String encryptedText = inputPanel.getEncryptedText();
         int keyLenMin = vigenereTab.getMinKeyLen();
         int keyLenMax = vigenereTab.getMaxKeyLen();
+
+        if(encryptedText.isEmpty()) {
+            displayStatus(StatusMessages.NO_INPUT_TEXT);
+            return;
+        }
+
+        if(keyLenMin >= keyLenMax) {
+            displayStatus(String.format(StatusMessages.Formated.WRONG_KEY_LEN_RANGE,keyLenMin, keyLenMax));
+            return;
+        }
 
         Map<IDictionary, double[]> res = Cryptor.analyzeForVariousKeyLength(encryptedText,keyLenMin,keyLenMax);
 
@@ -109,13 +127,18 @@ public class AppController {
         int period = frequencyAnalysisTab.getPeriod();
         int offset = frequencyAnalysisTab.getOffset();
 
+        if(encryptedText.isEmpty()) {
+            displayStatus(StatusMessages.NO_INPUT_TEXT);
+            return;
+        }
+
         if(period >= encryptedText.length()) {
-            displayStatus("Period is bigger than encrypted message length.");
+            displayStatus(StatusMessages.WRONG_PERIOD);
             return;
         }
 
         if(offset >= encryptedText.length()) {
-            displayStatus("Offset is bigger thatn encrypted message length.");
+            displayStatus(StatusMessages.WRONG_OFFSET);
             return;
         }
 
@@ -143,27 +166,27 @@ public class AppController {
     public void addDictionary(String filePath) {
 
         if(filePath.isEmpty()) {
-            displayStatus("No file path.");
+            displayStatus(StatusMessages.NO_FILE_PATH);
             return;
         }
 
         File dictFile = new File(filePath);
         if(!dictFile.exists()) {
-            displayStatus("File does not exist.");
+            displayStatus(StatusMessages.FILE_NOT_FOUND);
             return;
         }
 
         try {
             IDictionary dictionary = DictionaryLoader.loadDictionaryFromFile(filePath);
             DictionaryService.getInstance().addDictionary(dictionary);
-            displayStatus("Dictionary "+dictionary.getLanguageCode()+" loaded.");
+            displayStatus(String.format(StatusMessages.Formated.DICTIONARY_LOADED, dictionary.getLanguageCode()));
         } catch (IOException e) {
             logger.severe("Exception ("+e.getClass()+") while loading dictionary: "+e.getMessage());
-            displayStatus("Error occurred while loading the dictionary.");
+            displayStatus(StatusMessages.ERROR_LOADING_DICTIONARY);
             return;
         } catch (NotADictionaryFileException e) {
             logger.severe("Format error while loading dictionary: "+e.getMessage());
-            displayStatus("File format error: "+e.getMessage());
+            displayStatus(String.format(StatusMessages.Formated.FILE_FORMAT_ERROR,e.getMessage()));
             return;
         }
 
