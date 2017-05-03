@@ -1,6 +1,7 @@
 package org.valesz.crypt.ui;
 
 import org.valesz.crypt.controller.AppController;
+import org.valesz.crypt.ui.input.InputPanel;
 import org.valesz.crypt.ui.tools.ToolsPanel;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ public class MainWindow extends JFrame {
     public static final int WIDTH = 600;
     public static final int HEIGHT = 600;
 
-    private JPanel inputPanel;
+    private InputPanel inputPanel;
     private JTabbedPane toolsPanel;
     private JLabel statusLabel;
 
@@ -35,9 +36,10 @@ public class MainWindow extends JFrame {
     }
 
     private void initComponents() {
-        inputPanel = new InputPanel(controller);
+        inputPanel = new InputPanel();
+        inputPanel.setController(controller);
         toolsPanel = new ToolsPanel(controller);
-        this.getContentPane().add(inputPanel, BorderLayout.NORTH);
+        this.getContentPane().add(inputPanel.getMainPanel(), BorderLayout.NORTH);
         this.getContentPane().add(toolsPanel, BorderLayout.CENTER);
         initStatusPanel();
     }

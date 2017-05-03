@@ -9,17 +9,18 @@ import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 import org.valesz.crypt.ui.StatusMessages;
-import org.valesz.crypt.ui.InputPanel;
+import org.valesz.crypt.ui.InputPanelOld;
 import org.valesz.crypt.ui.MainWindow;
+import org.valesz.crypt.ui.input.InputPanel;
 import org.valesz.crypt.ui.tools.dictionary.DictionaryTab;
 import org.valesz.crypt.ui.tools.freqAnal.FrequencyAnalysisTab;
+import org.valesz.crypt.ui.tools.misc.MiscTab;
 import org.valesz.crypt.ui.tools.vigenere.VigenereTab;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.ErrorManager;
 import java.util.logging.Logger;
 
 /**
@@ -43,9 +44,14 @@ public class AppController {
     private InputPanel inputPanel;
     private DictionaryTab dictionaryTab;
     private VigenereTab vigenereTab;
+    private MiscTab miscTab;
 
     private AppController() {
 
+    }
+
+    public void setMiscTab(MiscTab miscTab) {
+        this.miscTab = miscTab;
     }
 
     public void setFrequencyAnalysisTab(FrequencyAnalysisTab frequencyAnalysisTab) {

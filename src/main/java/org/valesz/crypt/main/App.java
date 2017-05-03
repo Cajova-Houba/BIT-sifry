@@ -42,8 +42,8 @@ public class App
     public static void main( String[] args ) throws IOException, NotADictionaryFileException {
         logger.info("Starting application.");
         // TODO: make sure the default dictionary is loaded properly
-        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/cz.dict"));
-        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/en.dict"));
+        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("C:/users/valesz/tmp/cz.dict"));
+        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("C:/users/valesz/tmp/en.dict"));
         JFrame frame = new MainWindow(AppController.getInstance());
         frame.setVisible(true);
 //        try {

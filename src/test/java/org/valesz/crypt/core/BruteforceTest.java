@@ -25,6 +25,18 @@ import static org.junit.Assert.*;
  */
 public class BruteforceTest {
 
+    @Test
+    public void breakEasyColumnTrans() throws IOException, NotADictionaryFileException {
+        DictionaryService dictionaryService = loadDefaultDictionaries();
+        String message = "Chudak Lepenka Kazdy si z ni ted utahuje Ja ne Vezmu pilku na lepenku a vyrezu z ni peticipou hvezdu nabarvim cervene a zavesim Spickou dolu At kazdy vidi";
+        String key = "asdf";
+        String encMessage = Cryptor.columnTrans(message, key);
+        int period = key.length();
+
+        FrequencyAnalyser frequencyAnalyser = new FrequencyAnalyser(encMessage);
+        List<FrequencyAnalysisResult> digramAnalysis = null;
+    }
+
     /**
      * This test case demonstrates the process of breaking the vigenere cipher with key len 1.
      * @throws IOException
@@ -32,21 +44,7 @@ public class BruteforceTest {
      */
     @Test
     public void testBreakEasyVigenere() throws IOException, NotADictionaryFileException {
-        DictionaryService dictionaryService = DictionaryService.getInstance();
-//        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/cz.dict")));
-//        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/en.dict")));
-        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/cz.dict"));
-        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/en.dict"));
-        List<String> czechWords = Arrays.asList(
-                "chudak",
-                "lepenka",
-                "kazdy",
-                "uthuje",
-                "peticipou",
-                "vyrezu",
-                "hvezdu",
-                "nabarvim"
-        );
+        DictionaryService dictionaryService = loadDefaultDictionaries();
         String message = "Chudak Lepenka Kazdy si z ni ted utahuje Ja ne Vezmu pilku na lepenku a vyrezu z ni peticipou hvezdu nabarvim cervene a zavesim Spickou dolu At kazdy vidi";
         String realKey = "k";
         String expLanguage = "CZ";
@@ -89,11 +87,7 @@ public class BruteforceTest {
 
     @Test
     public void testBreakVigenere() throws IOException, NotADictionaryFileException {
-        DictionaryService dictionaryService = DictionaryService.getInstance();
-//        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/cz.dict")));
-//        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/en.dict")));
-        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/cz.dict"));
-        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/en.dict"));
+        DictionaryService dictionaryService = loadDefaultDictionaries();
 
         List<String> czechWords = Arrays.asList(
                 "chudak",
@@ -290,5 +284,14 @@ public class BruteforceTest {
 
     private String getResourcePath(String resourceName) {
         return getClass().getResource(resourceName).getPath();
+    }
+
+    private DictionaryService loadDefaultDictionaries() throws IOException, NotADictionaryFileException {
+        DictionaryService dictionaryService = DictionaryService.getInstance();
+        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/cz.dict")));
+        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/en.dict")));
+//        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/cz.dict"));
+//        dictionaryService.addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/en.dict"));
+        return dictionaryService;
     }
 }
