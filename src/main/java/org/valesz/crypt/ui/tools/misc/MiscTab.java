@@ -22,6 +22,8 @@ public class MiscTab {
     private JButton decryptBtn;
     private JTextField keyTextField;
     private JPanel mainPanel;
+    private JButton loadInputBtn;
+    private JButton saveOutputBtn;
 
     private AppController controller;
 
