@@ -19,6 +19,7 @@ public class InputPanel {
 
     public void setController(AppController controller) {
         this.controller = controller;
+        this.controller.setInputPanel(this);
     }
 
     public String getEncryptedText() {
