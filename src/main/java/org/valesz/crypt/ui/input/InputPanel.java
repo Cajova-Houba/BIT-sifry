@@ -22,7 +22,7 @@ public class InputPanel {
         this.controller.setInputPanel(this);
     }
 
-    public String getEncryptedText() {
+    public String getInputText() {
         return inputTextArea.getText();
     }
 }

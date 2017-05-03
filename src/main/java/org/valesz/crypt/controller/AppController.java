@@ -1,6 +1,7 @@
 package org.valesz.crypt.controller;
 
 import org.valesz.crypt.core.Cryptor;
+import org.valesz.crypt.core.EncryptionMethodType;
 import org.valesz.crypt.core.dictionary.DictionaryLoader;
 import org.valesz.crypt.core.dictionary.DictionaryService;
 import org.valesz.crypt.core.dictionary.IDictionary;
@@ -49,6 +50,90 @@ public class AppController {
 
     }
 
+    public void decrypt() {
+        EncryptionMethodType type = miscTab.getSelectedMethodType();
+        String key = miscTab.getKey();
+        String inputText = inputPanel.getInputText();
+        String outputText = "";
+
+        if(inputText.isEmpty()) {
+            displayStatus(StatusMessages.NO_INPUT_TEXT);
+            return;
+        }
+
+        switch (type) {
+            case Atbas:
+                outputText = Cryptor.deAtbas(inputText);
+                break;
+            case Caesar:
+                if(key.isEmpty()) {
+                    displayStatus(StatusMessages.NO_KEY);
+                    return;
+                }
+                outputText = Cryptor.deVigenere(inputText, key.substring(0,1));
+                break;
+            case Vigenere:
+                if(key.isEmpty()) {
+                    displayStatus(StatusMessages.NO_KEY);
+                    return;
+                }
+                outputText = Cryptor.deVigenere(inputText, key);
+                break;
+            case ColumnTrans:
+                if(key.isEmpty()) {
+                    displayStatus(StatusMessages.NO_KEY);
+                    return;
+                }
+                outputText = Cryptor.deColumnTrans(inputText, key);
+                break;
+        }
+
+        miscTab.setOutputText(outputText);
+        displayDefaultStatus();
+    }
+
+    public void encrypt() {
+        EncryptionMethodType type = miscTab.getSelectedMethodType();
+        String key = miscTab.getKey();
+        String inputText = inputPanel.getInputText();
+        String outputText = "";
+
+        if(inputText.isEmpty()) {
+            displayStatus(StatusMessages.NO_INPUT_TEXT);
+            return;
+        }
+
+        switch (type) {
+            case Atbas:
+                outputText = Cryptor.atbas(inputText);
+                break;
+            case Caesar:
+                if(key.isEmpty()) {
+                    displayStatus(StatusMessages.NO_KEY);
+                    return;
+                }
+                outputText = Cryptor.vigenere(inputText, key.substring(0,1));
+                break;
+            case Vigenere:
+                if(key.isEmpty()) {
+                    displayStatus(StatusMessages.NO_KEY);
+                    return;
+                }
+                outputText = Cryptor.vigenere(inputText, key);
+                break;
+            case ColumnTrans:
+                if(key.isEmpty()) {
+                    displayStatus(StatusMessages.NO_KEY);
+                    return;
+                }
+                outputText = Cryptor.columnTrans(inputText, key);
+                break;
+        }
+
+        miscTab.setOutputText(outputText);
+        displayDefaultStatus();
+    }
+
     public void setMiscTab(MiscTab miscTab) {
         this.miscTab = miscTab;
     }
@@ -74,7 +159,7 @@ public class AppController {
     }
 
     public void guessVigenereKey() {
-        String encryptedText = inputPanel.getEncryptedText();
+        String encryptedText = inputPanel.getInputText();
         int keyLen = vigenereTab.getKeyLength();
         IDictionary dictionary = vigenereTab.getSelectedDictionary();
 
@@ -101,7 +186,7 @@ public class AppController {
     }
 
     public void performVigenereAnalysis() {
-        String encryptedText = inputPanel.getEncryptedText();
+        String encryptedText = inputPanel.getInputText();
         int keyLenMin = vigenereTab.getMinKeyLen();
         int keyLenMax = vigenereTab.getMaxKeyLen();
 
@@ -130,7 +215,7 @@ public class AppController {
     }
 
     public void performFrequencyAnalysis() {
-        String encryptedText = inputPanel.getEncryptedText();
+        String encryptedText = inputPanel.getInputText();
         int period = frequencyAnalysisTab.getPeriod();
         int offset = frequencyAnalysisTab.getOffset();
 

@@ -13,9 +13,6 @@ import java.util.List;
 public class FrequencyAnalysisTab {
     private JPanel mainPanel;
     private JPanel configPanel;
-    private JPanel lettersPanel;
-    private JPanel digramsPanel;
-    private JPanel trigramsPanel;
     private JLabel languageText;
     private JLabel lettersText;
     private JLabel digramsText;
@@ -27,6 +24,9 @@ public class FrequencyAnalysisTab {
     private JButton saveToFileBtn;
     private JSpinner offsetSpinner;
     private JSpinner periodSpinner;
+    private JPanel trigamsPanel;
+    private JPanel letterPanel;
+    private JPanel digramsPanel;
 
     private AppController controller;
 

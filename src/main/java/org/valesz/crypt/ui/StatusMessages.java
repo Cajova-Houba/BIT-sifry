@@ -30,4 +30,6 @@ public class StatusMessages {
     public static final String NO_FILE_PATH = "Není zadána cesta k souboru.";
 
     public static final String FILE_NOT_FOUND = "Soubor nenalezen.";
+
+    public static final String NO_KEY = "Není klíč.";
 }

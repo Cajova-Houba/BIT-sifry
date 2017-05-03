@@ -9,5 +9,6 @@ public enum EncryptionMethodType {
 
     Atbas,
     Vigenere,
+    Caesar,
     ColumnTrans
 }
