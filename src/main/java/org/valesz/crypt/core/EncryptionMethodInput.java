@@ -14,4 +14,11 @@ public interface EncryptionMethodInput {
      */
     String getText();
 
+    /**
+     * Clones this input object with all of its properties and new text.
+     * @param newText New text.
+     * @return Cloned object.
+     */
+    EncryptionMethodInput cloneInput(String newText);
+
 }

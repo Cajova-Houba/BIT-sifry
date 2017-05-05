@@ -16,4 +16,9 @@ public class AtbasInput implements EncryptionMethodInput {
     public String getText() {
         return openText;
     }
+
+    @Override
+    public EncryptionMethodInput cloneInput(String newText) {
+        return new AtbasInput(newText);
+    }
 }

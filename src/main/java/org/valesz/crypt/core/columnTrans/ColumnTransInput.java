@@ -24,4 +24,9 @@ public class ColumnTransInput implements EncryptionMethodInput {
     public String getKey() {
         return key;
     }
+
+    @Override
+    public EncryptionMethodInput cloneInput(String newText) {
+        return new ColumnTransInput(newText, key);
+    }
 }
