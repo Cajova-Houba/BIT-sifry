@@ -3,10 +3,14 @@ package org.valesz.crypt.controller;
 import org.valesz.crypt.core.EncryptionMethod;
 import org.valesz.crypt.core.EncryptionMethodInput;
 import org.valesz.crypt.core.EncryptionMethodOutput;
+import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
+import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 import org.valesz.crypt.core.utils.FileUtils;
 import org.valesz.crypt.main.App;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -15,6 +19,8 @@ import java.util.logging.Logger;
  * Created by Zdenek Vales on 5.5.2017.
  */
 public class CLIController {
+
+    public static final String FREQ_ANAL_OUT_FORMAT = "%s\t%d\t%.4f\n";
 
     private static CLIController instance = new CLIController();
 
@@ -224,6 +230,110 @@ public class CLIController {
 
         input = input.cloneInput(openText);
         return decrypt(method, input);
+    }
+
+    /**
+     * Performs a letter frequency analysis and prints results.
+     * @param inputText Input text.
+     * @return
+     */
+    public int frequencyAnalysis(String inputText) {
+        FrequencyAnalyser fa = new FrequencyAnalyser(inputText);
+        List<FrequencyAnalysisResult> letters = fa.analyse(FrequencyAnalysisMethod.Letters, 0,0);
+
+        for(FrequencyAnalysisResult res : letters) {
+            System.out.print(String.format(FREQ_ANAL_OUT_FORMAT, res.getCharacter(), res.getAbsoluteCount(), res.getRelativeCount()));
+        }
+
+        return 0;
+    }
+
+    /**
+     * Performs a letter frequency analysis and prints results to the file.
+     * @param inputText
+     * @param outFile
+     * @return
+     */
+    public int frequencyAnalysis(String inputText, String outFile) {
+        FrequencyAnalyser fa = new FrequencyAnalyser(inputText);
+        List<FrequencyAnalysisResult> letters = fa.analyse(FrequencyAnalysisMethod.Letters, 0,0);
+        StringBuilder sb = new StringBuilder();
+
+        for(FrequencyAnalysisResult res : letters) {
+            sb.append(String.format(FREQ_ANAL_OUT_FORMAT, res.getCharacter(), res.getAbsoluteCount(), res.getRelativeCount()));
+        }
+
+        try {
+            FileUtils.writeToFile(outFile, sb.toString());
+        } catch (IOException e) {
+            logger.severe("Error while writing output to file "+outFile+". Exception "+e.getClass()+", message: "+e.getMessage());
+            System.out.println("Chyba při zápisu do souboru "+outFile);
+            return 1;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Performs a frequency analysis over text which is loaded from the input file and prints results
+     * using standard output.
+     * @param inFile
+     * @return
+     */
+    public int frequencyAnalysisInFile(String inFile) {
+        String inputText = "";
+        try {
+            inputText = FileUtils.readFromFile(inFile);
+        } catch (IOException e) {
+            logger.severe("Error while reading input from file "+inFile+". Exception "+e.getClass()+", message: "+e.getMessage());
+            System.out.println("Chyba při čtení ze souboru "+inFile);
+            return 1;
+        }
+
+        FrequencyAnalyser fa = new FrequencyAnalyser(inputText);
+        List<FrequencyAnalysisResult> letters = fa.analyse(FrequencyAnalysisMethod.Letters, 0,0);
+
+        for(FrequencyAnalysisResult res : letters) {
+            System.out.print(String.format(FREQ_ANAL_OUT_FORMAT, res.getCharacter(), res.getAbsoluteCount(), res.getRelativeCount()));
+        }
+
+        return 0;
+    }
+
+    /**
+     * Performs frequency analysis over text which is loaded from the input file and prints results to the
+     * output file.
+     * @param inFile
+     * @param outFile
+     * @return
+     */
+    public int frequencyAnalysisInFileOutFile(String inFile, String outFile) {
+        String inputText = "";
+        try {
+            inputText = FileUtils.readFromFile(inFile);
+        } catch (IOException e) {
+            logger.severe("Error while reading input from file "+inFile+". Exception "+e.getClass()+", message: "+e.getMessage());
+            System.out.println("Chyba při čtení ze souboru "+inFile);
+            return 1;
+        }
+
+        FrequencyAnalyser fa = new FrequencyAnalyser(inputText);
+        List<FrequencyAnalysisResult> letters = fa.analyse(FrequencyAnalysisMethod.Letters, 0,0);
+        StringBuilder sb = new StringBuilder();
+
+        for(FrequencyAnalysisResult res : letters) {
+            sb.append(String.format(FREQ_ANAL_OUT_FORMAT, res.getCharacter(), res.getAbsoluteCount(), res.getRelativeCount()));
+        }
+
+        try {
+            FileUtils.writeToFile(outFile, sb.toString());
+        } catch (IOException e) {
+            logger.severe("Error while writing output to file "+outFile+". Exception "+e.getClass()+", message: "+e.getMessage());
+            System.out.println("Chyba při zápisu do souboru "+outFile);
+            return 1;
+        }
+
+        return 0;
     }
 
 }

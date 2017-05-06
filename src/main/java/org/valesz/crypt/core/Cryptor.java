@@ -166,64 +166,6 @@ public class Cryptor {
         return res;
     }
 
-    /**
-     * Method will try to break the encrypted message. It will keep trying to decrypt the message. After every attempt,
-     * words from dictionary will be searched for in decrypted string and if any match occurs, attempt will be added to result
-     * array.
-     * @param message Message to be decrypted.
-     * @param dictionary Dictionary to be used.
-     * @return List of found results. If no matches are found, empty list is returned. Never null.
-     */
-    public static List<BruteforceResult> bruteforce(String message, OldDictionary dictionary) {
-        List<BruteforceResult> res = new ArrayList<BruteforceResult>();
-
-        List<String> expectedWords = dictionary.getExpectedWords();
-        List<String> keysToTry = dictionary.getKeys();
-        List<String> foundWords = new ArrayList<String>();
-        String decText = "";
-
-        // try atbas first
-        decText = deAtbas(message);
-        for (String commonWord: expectedWords) {
-            if(decText.contains(commonWord)) {
-                foundWords.add(commonWord);
-            }
-        }
-        if (foundWords.size() > 0) {
-            // add possible result
-            res.add(new BruteforceResult(EncryptionMethodType.Atbas, decText, "", new ArrayList<String>(foundWords)));
-        }
-
-
-        // try key methods
-        for(String key : keysToTry) {
-            decText = deVigenere(message, key);
-            foundWords.clear();
-            for(String expectedWord: expectedWords) {
-                if (decText.contains(expectedWord)) {
-                    foundWords.add(expectedWord);
-                }
-            }
-            if (foundWords.size() > 0) {
-                res.add(new BruteforceResult(EncryptionMethodType.Vigenere, decText, key, new ArrayList<String>(foundWords)));
-            }
-
-            decText = deColumnTrans(message, key);
-            foundWords.clear();
-            for(String expectedWord : expectedWords) {
-                if (decText.contains(expectedWord)) {
-                    foundWords.add(expectedWord);
-                }
-            }
-            if (foundWords.size() > 0) {
-                res.add(new BruteforceResult(EncryptionMethodType.ColumnTrans, decText, key, new ArrayList<String>(foundWords)));
-            }
-        }
-
-
-        return res;
-    }
-
     public static String atbas(String message) {
         return new AtbasMethod().encrypt(new AtbasInput(message)).getText();
     }

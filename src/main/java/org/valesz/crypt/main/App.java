@@ -16,7 +16,7 @@ import org.valesz.crypt.core.vigenere.VigenereMethod;
 import org.valesz.crypt.ui.MainWindow;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -39,7 +39,7 @@ public class App
     };
 
     public static final String INPUT_TEXT_PARAM = "-t";
-    public static final String KEY_PARAM = "-t";
+    public static final String KEY_PARAM = "-k";
     public static final String INPUT_FILE_PARAM = "-i";
     public static final String OUTPUT_FILE_PARAM = "-o";
     public static final String METHOD_PARAM = "-m";
@@ -142,6 +142,11 @@ public class App
             // prepare the method
             EncryptionMethod encryptionMethod;
             EncryptionMethodInput encryptionMethodInput;
+            if(method == null) {
+                System.out.println("Neni metoda.");
+                return 1;
+            }
+            logger.info("Metoda: "+method);
             if(method.equalsIgnoreCase(ATBAS_METHOD)){
                 encryptionMethod = new AtbasMethod();
                 encryptionMethodInput = new AtbasInput(inputText);
@@ -151,6 +156,7 @@ public class App
                     System.out.println("Neni klic.");
                     return 1;
                 }
+                logger.info("Klic: "+key);
                 encryptionMethodInput = new VigenereInput(inputText, key);
             } else if(method.equalsIgnoreCase(COLUMN_TRANS_METHOD)) {
                 encryptionMethod = new ColumnTransMethod();
@@ -167,6 +173,7 @@ public class App
             // call controller
             int res = 0;
             if(inputText != null) {
+                logger.info("Input: "+inputText);
                 if(outputFile == null) {
                     if(enc) {
                         return cliController.encrypt(encryptionMethod, encryptionMethodInput);
@@ -201,17 +208,33 @@ public class App
 
         } else if(action.equalsIgnoreCase(FREQ_ANAL_PARAM_NAME)) {
             // load needed input
+            String inputText = loadParameterValue(args, INPUT_TEXT_PARAM);
+            String inputFile = loadParameterValue(args, INPUT_FILE_PARAM);
+            String outputFile = loadParameterValue(args, OUTPUT_FILE_PARAM);
 
             // call controller
+            if(inputText != null) {
+                if(outputFile == null) {
+                    return cliController.frequencyAnalysis(inputText);
+                } else {
+                    return cliController.frequencyAnalysis(inputText, outputFile);
+                }
+            } else if(inputFile != null) {
+                if(outputFile == null) {
+                    return cliController.frequencyAnalysisInFile(inputFile);
+                } else {
+                    return cliController.frequencyAnalysisInFileOutFile(inputFile, outputFile);
+                }
+            } else {
+                System.out.println("Neni zadny vstupni text.");
+                return 1;
+            }
 
-            // return value
         } else {
             // unsupported action
             logger.severe("Unsupported action: "+action);
             System.out.println("Nepodporvana akce: "+action);
             return 1;
         }
-
-        return 0;
     }
 }

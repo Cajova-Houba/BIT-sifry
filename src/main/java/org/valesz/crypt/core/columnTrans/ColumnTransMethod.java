@@ -63,9 +63,9 @@ public class ColumnTransMethod implements EncryptionMethod<ColumnTransInput, Col
         // print table
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[0].length; j++) {
-                System.out.print(table[i][j]+" ");
+//                System.out.print(table[i][j]+" ");
             }
-            System.out.print("\n");
+//            System.out.print("\n");
         }
 
         // encrypt the message
