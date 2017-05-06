@@ -13,9 +13,9 @@ import java.util.List;
 public class FrequencyAnalysisTableModel extends AbstractTableModel {
 
     public static final String[] columnHeaders = new String[] {
-            "Sequence",
-            "Absolute count",
-            "Relative count"
+            "Řetězec",
+            "Absolutní počet",
+            "Relativní počet"
     };
 
     private FrequencyAnalysisResult[] data;

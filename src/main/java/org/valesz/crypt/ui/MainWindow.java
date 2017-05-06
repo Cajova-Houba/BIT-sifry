@@ -14,8 +14,8 @@ import java.awt.*;
 public class MainWindow extends JFrame {
 
     public static final String TITLE = "BIT - Cryptor";
-    public static final int WIDTH = 600;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 700;
 
     private InputPanel inputPanel;
     private JTabbedPane toolsPanel;
@@ -28,6 +28,7 @@ public class MainWindow extends JFrame {
         this.controller = controller;
         controller.setMainWindow(this);
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setSize(WIDTH, HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());

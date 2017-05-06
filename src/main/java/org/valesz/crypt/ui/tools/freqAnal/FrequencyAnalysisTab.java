@@ -49,7 +49,7 @@ public class FrequencyAnalysisTab {
 
     public void setController(AppController controller) {
         this.controller = controller;
-        controller.setFrequencyAnalysisTab(this);
+        this.controller.setFrequencyAnalysisTab(this);
     }
 
     public void setLetterFreqAnal(List<FrequencyAnalysisResult> data) {
