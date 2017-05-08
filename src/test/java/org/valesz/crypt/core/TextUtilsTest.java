@@ -2,6 +2,7 @@ package org.valesz.crypt.core;
 
 import org.junit.Test;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
+import org.valesz.crypt.core.utils.TextUtils;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,5 +1,6 @@
-package org.valesz.crypt.core;
+package org.valesz.crypt.core.utils;
 
+import org.valesz.crypt.core.Cryptor;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 
 /**
@@ -8,6 +9,25 @@ import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
  * Created by Zdenek Vales on 19.3.2017.
  */
 public class TextUtils {
+
+    /**
+     * Strips all non-letter characters from text and converts upper case characters to lowercase
+     * @param text
+     * @return
+     */
+    public static String stripText(String text) {
+        StringBuilder sb = new StringBuilder();
+
+        for(char c : text.toCharArray()) {
+            if(c >= 'a' && c <= 'z') {
+                sb.append(c);
+            } else if (c >= 'A' && c <='Z') {
+                sb.append(Character.toLowerCase(c));
+            }
+        }
+
+        return sb.toString();
+    }
 
     /**
      * Returns a complex view for encrypted message with Letters method.

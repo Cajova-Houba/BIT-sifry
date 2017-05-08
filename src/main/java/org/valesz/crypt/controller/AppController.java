@@ -10,6 +10,7 @@ import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 import org.valesz.crypt.core.utils.FileUtils;
+import org.valesz.crypt.core.utils.TextUtils;
 import org.valesz.crypt.ui.MainWindow;
 import org.valesz.crypt.ui.StatusMessages;
 import org.valesz.crypt.ui.input.InputPanel;
@@ -116,6 +117,7 @@ public class AppController {
                 outputText = Cryptor.deAtbas(inputText);
                 break;
             case Caesar:
+                key = TextUtils.stripText(key);
                 if(key.isEmpty()) {
                     displayStatus(StatusMessages.NO_KEY);
                     return;
@@ -123,6 +125,7 @@ public class AppController {
                 outputText = Cryptor.deVigenere(inputText, key.substring(0,1));
                 break;
             case Vigenere:
+                key = TextUtils.stripText(key);
                 if(key.isEmpty()) {
                     displayStatus(StatusMessages.NO_KEY);
                     return;
@@ -130,6 +133,7 @@ public class AppController {
                 outputText = Cryptor.deVigenere(inputText, key);
                 break;
             case ColumnTrans:
+                key = TextUtils.stripText(key);
                 if(key.isEmpty()) {
                     displayStatus(StatusMessages.NO_KEY);
                     return;
@@ -158,6 +162,7 @@ public class AppController {
                 outputText = Cryptor.atbas(inputText);
                 break;
             case Caesar:
+                key = TextUtils.stripText(key);
                 if(key.isEmpty()) {
                     displayStatus(StatusMessages.NO_KEY);
                     return;
@@ -165,6 +170,7 @@ public class AppController {
                 outputText = Cryptor.vigenere(inputText, key.substring(0,1));
                 break;
             case Vigenere:
+                key = TextUtils.stripText(key);
                 if(key.isEmpty()) {
                     displayStatus(StatusMessages.NO_KEY);
                     return;
@@ -172,6 +178,7 @@ public class AppController {
                 outputText = Cryptor.vigenere(inputText, key);
                 break;
             case ColumnTrans:
+                key = TextUtils.stripText(key);
                 if(key.isEmpty()) {
                     displayStatus(StatusMessages.NO_KEY);
                     return;
