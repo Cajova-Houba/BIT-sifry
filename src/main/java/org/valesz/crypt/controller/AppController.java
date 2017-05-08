@@ -9,6 +9,7 @@ import org.valesz.crypt.core.dictionary.NotADictionaryFileException;
 import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
+import org.valesz.crypt.core.utils.FileUtils;
 import org.valesz.crypt.ui.MainWindow;
 import org.valesz.crypt.ui.StatusMessages;
 import org.valesz.crypt.ui.input.InputPanel;
@@ -48,6 +49,55 @@ public class AppController {
 
     private AppController() {
 
+    }
+
+    public void saveOutput() {
+        File outputFile = miscTab.getOutputFile();
+        String outText = miscTab.getOutputText();
+
+        if(outputFile == null) {
+            displayStatus(StatusMessages.NO_OUTPUT_FILE);
+            return;
+        }
+
+        try {
+            FileUtils.writeToFile(outputFile, outText);
+        } catch (IOException e) {
+            displayStatus(String.format(StatusMessages.Formated.ERROR_WRITING_TO_FILE, outputFile.getName()));
+            return;
+        }
+
+        displayStatus(String.format(StatusMessages.Formated.SAVED_TO_FILE, outputFile.getName()));
+    }
+
+    public void loadInput() {
+        File inputFile = miscTab.getInputFile();
+        if(inputFile == null) {
+            displayStatus(StatusMessages.NO_INPUT_FILE);
+            return;
+        }
+
+        if(!inputFile.exists()) {
+            displayStatus(String.format(StatusMessages.Formated.FILE_NOT_FOUND, inputFile.getName()));
+            return;
+        }
+
+        if(!inputFile.canRead()) {
+            displayStatus(String.format(StatusMessages.Formated.CANT_READ_FILE, inputFile.getName()));
+            return;
+        }
+
+        String inputText = "";
+        try {
+            inputText = FileUtils.readFromFile(inputFile);
+        } catch (IOException e) {
+            logger.severe("Error while reading file "+inputFile.getName()+". "+e.getMessage());
+            displayStatus(String.format(StatusMessages.Formated.ERROR_READING_FILE, inputFile.getName()));
+            return;
+        }
+
+        inputPanel.setInputText(inputText);
+        displayDefaultStatus();
     }
 
     public void decrypt() {

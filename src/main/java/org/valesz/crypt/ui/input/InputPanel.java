@@ -22,6 +22,10 @@ public class InputPanel {
         this.controller.setInputPanel(this);
     }
 
+    public void setInputText(String inputText) {
+        inputTextArea.setText(inputText);
+    }
+
     public String getInputText() {
         return inputTextArea.getText();
     }
