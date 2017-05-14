@@ -48,4 +48,14 @@ public class StatusMessages {
     public static final String NO_INPUT_FILE = "Není vstupní soubor";
 
     public static final String NO_OUTPUT_FILE = "Není vstupní soubor";
+
+    public static final String WRONG_THREAD_COUNT = "Neplatný počet vláken.";
+
+    public static final String NO_EXPECTED_WORDS = "Žádná očekávaná slova.";
+
+    public static final String PROCESS_RUNNING = "Probíhá akce...";
+
+    public static final String THREAD_ERROR = "Chyba při čekání na vlákno.";
+
+    public static final String NO_KEY_FOUND = "Klíč nenalezen.";
 }

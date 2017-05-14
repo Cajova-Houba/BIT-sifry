@@ -77,9 +77,18 @@ public class App
             }
         } else {
             // display gui
-            JFrame frame = new MainWindow(AppController.getInstance());
-            frame.setVisible(true);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    showGUI();
+                }
+            });
         }
+    }
+
+    private static void showGUI() {
+        JFrame frame = new MainWindow(AppController.getInstance());
+        frame.setVisible(true);
     }
 
     /**

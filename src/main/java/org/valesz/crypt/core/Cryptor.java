@@ -2,6 +2,7 @@ package org.valesz.crypt.core;
 
 import org.valesz.crypt.core.atbas.AtbasInput;
 import org.valesz.crypt.core.atbas.AtbasMethod;
+import org.valesz.crypt.core.columnTrans.ColumnTransGuessKeyResult;
 import org.valesz.crypt.core.columnTrans.ColumnTransInput;
 import org.valesz.crypt.core.columnTrans.ColumnTransMethod;
 import org.valesz.crypt.core.dictionary.DictionaryService;
@@ -32,18 +33,6 @@ public class Cryptor {
     public static final int FIRST_LETTER = (int)'a';
     public static final int LAST_LETTER = (int)'z';
 
-    /**
-     * A simple box for resulting found key and number of matches.
-     */
-    public static class ColumnTransGuessKeyResult {
-        public final String key;
-        public final int matches;
-
-        public ColumnTransGuessKeyResult(String k, int m) {
-            key = k;
-            matches = m;
-        }
-    }
 
     /**
      * Performs a frequency analysis with Letters method.

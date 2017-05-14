@@ -68,4 +68,16 @@ public class ColumnTransTab {
     public void displayFoundKey(String key) {
         foundKey.setText(key);
     }
+
+    public void setProgress(int progress) {
+        keyGuessProgress.setValue(progress);
+    }
+
+    public void disableKeySearch() {
+        guessKeyBtn.setEnabled(false);
+    }
+
+    public void enableKeySearch() {
+        guessKeyBtn.setEnabled(true);
+    }
 }

@@ -2,6 +2,8 @@ package org.valesz.crypt.controller;
 
 import org.valesz.crypt.core.Cryptor;
 import org.valesz.crypt.core.EncryptionMethodType;
+import org.valesz.crypt.core.columnTrans.ColumnTransGuessKeyResult;
+import org.valesz.crypt.core.columnTrans.ColumnTransKeyGuessThread;
 import org.valesz.crypt.core.dictionary.DictionaryLoader;
 import org.valesz.crypt.core.dictionary.DictionaryService;
 import org.valesz.crypt.core.dictionary.IDictionary;
@@ -20,6 +22,9 @@ import org.valesz.crypt.ui.tools.freqAnal.FrequencyAnalysisTab;
 import org.valesz.crypt.ui.tools.misc.MiscTab;
 import org.valesz.crypt.ui.tools.vigenere.VigenereTab;
 
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -364,21 +369,83 @@ public class AppController {
                 "nezeptas"
         );
 
-        // compute stuff
-        String key = "";
-        int maxMatch = 0;
-        for (int i = minKeyLen; i <= maxKeyLen; i++) {
-            Cryptor.ColumnTransGuessKeyResult res = Cryptor.guessColumntransKey(encText, i, expectedWords);
-            if(res.matches > maxMatch) {
-                key = res.key;
-                maxMatch = res.matches;
-            }
+        // check inputs
+        if(encText.isEmpty()) {
+            displayStatus(StatusMessages.NO_INPUT_TEXT);
+            return;
+        }
+        if(threadCount < 1) {
+            displayStatus(StatusMessages.WRONG_THREAD_COUNT);
+            return;
+        }
+        if(minKeyLen < 1 || maxKeyLen < 1 || minKeyLen > maxKeyLen) {
+            displayStatus(String.format(StatusMessages.Formated.WRONG_KEY_LEN_RANGE,minKeyLen, maxKeyLen));
+            return;
+        }
+        if(expectedWords.isEmpty()) {
+            displayStatus(StatusMessages.NO_EXPECTED_WORDS);
+            return;
         }
 
-        // display results
-        columnTransTab.displayFoundKey(key);
-        columnTransTab.setDecText(Cryptor.deColumnTrans(encText, key));
-        displayDefaultStatus();
+        // compute stuff
+        columnTransTab.disableKeySearch();
+        columnTransTab.setProgress(0);
+
+        // swing worker for progress updater
+        SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                ColumnTransKeyGuessThread[] threads = new ColumnTransKeyGuessThread[maxKeyLen - minKeyLen + 1];
+                String key = "";
+                int maxMatch = 0;
+                for (int i = minKeyLen; i <= maxKeyLen; i++) {
+                    threads[i - minKeyLen] = new ColumnTransKeyGuessThread(encText, i, expectedWords);
+                    threads[i - minKeyLen].start();
+                }
+
+                for (int i = 0; i < threads.length; i++) {
+                    try {
+                        threads[i].join();
+                        ColumnTransGuessKeyResult r = threads[i].getRes();
+                        if (r.matches > maxMatch) {
+                            maxMatch = r.matches;
+                            key = r.key;
+                        }
+                        logger.info("Thread " + i + " finished");
+                        setProgress((i+1)*100/threads.length);
+                    } catch (InterruptedException e) {
+                        logger.severe("Error while joining the column transofrmation key guess thread: " + e.getMessage());
+                    }
+                }
+
+                // display results
+                if (key.isEmpty()) {
+                    displayStatus(StatusMessages.NO_KEY_FOUND);
+                } else {
+                    columnTransTab.displayFoundKey(key);
+                    columnTransTab.setDecText(Cryptor.deColumnTrans(encText, key));
+                    displayDefaultStatus();
+                }
+                columnTransTab.enableKeySearch();
+                return null;
+            }
+        };
+        // progress bar updater
+        task.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("progress" == evt.getPropertyName()) {
+                    int progress = (Integer) evt.getNewValue();
+                    columnTransTab.setProgress(progress);
+                }
+            }
+        });
+
+        // run the task
+        task.execute();
+
+
+        displayStatus(StatusMessages.PROCESS_RUNNING);
     }
 
     private void displayDefaultStatus() {
