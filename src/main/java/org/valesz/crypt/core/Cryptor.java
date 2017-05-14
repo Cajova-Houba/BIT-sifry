@@ -9,6 +9,7 @@ import org.valesz.crypt.core.dictionary.IDictionary;
 import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
+import org.valesz.crypt.core.utils.TextUtils;
 import org.valesz.crypt.core.vigenere.VigenereInput;
 import org.valesz.crypt.core.vigenere.VigenereMethod;
 
@@ -30,6 +31,19 @@ public class Cryptor {
     public static final int ALPHABET_LEN = 26;
     public static final int FIRST_LETTER = (int)'a';
     public static final int LAST_LETTER = (int)'z';
+
+    /**
+     * A simple box for resulting found key and number of matches.
+     */
+    public static class ColumnTransGuessKeyResult {
+        public final String key;
+        public final int matches;
+
+        public ColumnTransGuessKeyResult(String k, int m) {
+            key = k;
+            matches = m;
+        }
+    }
 
     /**
      * Performs a frequency analysis with Letters method.
@@ -94,6 +108,37 @@ public class Cryptor {
         }
 
         return keyBuilder.toString();
+    }
+
+    /**
+     * Tries to guess the key of column transposition cipher.
+     *
+     * @param encMessage Encrypted message.
+     * @param keyLength Key length to be used.
+     * @param expectedWords Algorithm will search for these words in decrypted message and the with highest match count will be returned.
+     * @return
+     */
+    public static ColumnTransGuessKeyResult guessColumntransKey(String encMessage, int keyLength, List<String> expectedWords) {
+        char[] possibleKey = new char[keyLength];
+        for (int i = 0; i < keyLength; i++) {
+            possibleKey[i] = 'a';
+        }
+
+
+        int maxMatch = 0;
+        String key = "";
+        for (int i = 0; i <= (int)Math.pow(26, keyLength); i++) {
+            String decMsg = deColumnTrans(encMessage, new String(possibleKey));
+            int match = TextUtils.countMatches(decMsg, expectedWords);
+            if(match > maxMatch) {
+                maxMatch = match;
+                key = new String(possibleKey);
+            }
+
+            TextUtils.incString(possibleKey, keyLength);
+        }
+
+        return new ColumnTransGuessKeyResult(key, maxMatch);
     }
 
     /**

@@ -1,6 +1,7 @@
 package org.valesz.crypt.ui.tools;
 
 import org.valesz.crypt.controller.AppController;
+import org.valesz.crypt.ui.tools.columnTrans.ColumnTransTab;
 import org.valesz.crypt.ui.tools.dictionary.DictionaryTab;
 import org.valesz.crypt.ui.tools.freqAnal.FrequencyAnalysisTab;
 import org.valesz.crypt.ui.tools.misc.MiscTab;
@@ -17,6 +18,7 @@ public class ToolsPanel extends JTabbedPane {
     private DictionaryTab dictionaryTab;
     private VigenereTab vigenereTab;
     private MiscTab miscTab;
+    private ColumnTransTab columnTransTab;
 
     private AppController controller;
 
@@ -34,8 +36,12 @@ public class ToolsPanel extends JTabbedPane {
         dictionaryTab.setController(controller);
         miscTab = new MiscTab();
         miscTab.setController(controller);
+        columnTransTab = new ColumnTransTab();
+        columnTransTab.setController(controller);
+
         addTab("Frekvenční analýza", faTab.getMainPanel());
         addTab("Vigenere", vigenereTab.getMainPanel());
+        addTab("Sloupcová transpozice", columnTransTab.getMainPanel());
         addTab("Slovníky", dictionaryTab.getMainPanel());
         addTab("Ostatní", miscTab.getMainPanel());
     }

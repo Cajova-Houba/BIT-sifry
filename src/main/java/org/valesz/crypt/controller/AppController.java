@@ -14,6 +14,7 @@ import org.valesz.crypt.core.utils.TextUtils;
 import org.valesz.crypt.ui.MainWindow;
 import org.valesz.crypt.ui.StatusMessages;
 import org.valesz.crypt.ui.input.InputPanel;
+import org.valesz.crypt.ui.tools.columnTrans.ColumnTransTab;
 import org.valesz.crypt.ui.tools.dictionary.DictionaryTab;
 import org.valesz.crypt.ui.tools.freqAnal.FrequencyAnalysisTab;
 import org.valesz.crypt.ui.tools.misc.MiscTab;
@@ -21,6 +22,7 @@ import org.valesz.crypt.ui.tools.vigenere.VigenereTab;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -47,6 +49,7 @@ public class AppController {
     private DictionaryTab dictionaryTab;
     private VigenereTab vigenereTab;
     private MiscTab miscTab;
+    private ColumnTransTab columnTransTab;
 
     private AppController() {
 
@@ -344,9 +347,45 @@ public class AppController {
         displayDefaultStatus();
     }
 
+    public void guessColumnTransKey() {
+        // load inputs
+        String encText = inputPanel.getInputText();
+        int threadCount = columnTransTab.getThreadCount();
+        int minKeyLen = columnTransTab.getMinKeyLength();
+        int maxKeyLen = columnTransTab.getMaxKeyLength();
+        List<String> expectedWords = Arrays.asList(
+                "zeptasli",
+                "budes",
+                "pet",
+                "minut",
+                "vypadat",
+                "jako",
+                "blbec",
+                "nezeptas"
+        );
+
+        // compute stuff
+        String key = "";
+        int maxMatch = 0;
+        for (int i = minKeyLen; i <= maxKeyLen; i++) {
+            Cryptor.ColumnTransGuessKeyResult res = Cryptor.guessColumntransKey(encText, i, expectedWords);
+            if(res.matches > maxMatch) {
+                key = res.key;
+                maxMatch = res.matches;
+            }
+        }
+
+        // display results
+        columnTransTab.displayFoundKey(key);
+        columnTransTab.setDecText(Cryptor.deColumnTrans(encText, key));
+        displayDefaultStatus();
+    }
+
     private void displayDefaultStatus() {
         displayStatus(StatusMessages.DEFAULT);
     }
 
-
+    public void setColumnTransTab(ColumnTransTab columnTransTab) {
+        this.columnTransTab = columnTransTab;
+    }
 }

@@ -9,6 +9,7 @@ import org.valesz.crypt.core.dictionary.NotADictionaryFileException;
 import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
+import org.valesz.crypt.core.utils.TextUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,17 +26,81 @@ import static org.junit.Assert.*;
  */
 public class BruteforceTest {
 
+
     @Test
     public void breakEasyColumnTrans() throws IOException, NotADictionaryFileException {
         DictionaryService dictionaryService = loadDefaultDictionaries();
         String message = "Chudak Lepenka Kazdy si z ni ted utahuje Ja ne Vezmu pilku na lepenku a vyrezu z ni peticipou hvezdu nabarvim cervene a zavesim Spickou dolu At kazdy vidi";
         String key = "asdf";
         String encMessage = Cryptor.columnTrans(message, key);
-        int period = key.length();
 
-        FrequencyAnalyser frequencyAnalyser = new FrequencyAnalyser(encMessage);
-        List<FrequencyAnalysisResult> digramAnalysis = null;
+        // find out factors of meesage length
+        List<Integer> possibleKeyLengths = new LinkedList<>();
+        boolean keyLenPresent = false;
+        int mLen = encMessage.length();
+        for(int i = 1; i <= Math.sqrt(message.length()); i++) {
+            if(mLen % i == 0) {
+                possibleKeyLengths.add(i);
+                if(i == key.length()){
+                    keyLenPresent = true;
+                }
+            }
+        }
+        possibleKeyLengths.add(mLen);
+
+        // key len should be in possible key lengths
+        assertTrue("Key length not found!", keyLenPresent);
+
+        // test all keys of length key.length
+        // choose the one with best match
+        List<String> expectedWords = Arrays.asList(
+                "chudak",
+                "lepenka",
+                "kazdy",
+                "si",
+                "z",
+                "ni",
+                "ted",
+                "utahuje",
+                "ja",
+                "ne",
+                "vezmu",
+                "pilku",
+                "na",
+                "lepenku"
+        );
+        char[] possibleKey = "abcd".toCharArray();
+        int maxMatches = 0;
+        String foundKey = "";
+        for(int i = 0; i < 26*26*26*26; i++) {
+            if(possibleKey[0] == possibleKey[1] || possibleKey[0] == possibleKey[2] || possibleKey[0] == possibleKey[3] || possibleKey[1] ==possibleKey[2] || possibleKey[1] == possibleKey[3] || possibleKey[2] == possibleKey[3]) {
+                TextUtils.incString(possibleKey, 4);
+                continue;
+            }
+            String tmp = Cryptor.deColumnTrans(encMessage, new String(possibleKey));
+            int cnt = countMatches(tmp, expectedWords);
+            if(cnt >= maxMatches) {
+                maxMatches = cnt;
+                foundKey = new String(possibleKey);
+            }
+
+            TextUtils.incString(possibleKey,4);
+        }
+
+        assertEquals("Wrong key: "+key, expectedWords.size(), maxMatches);
     }
+
+    private int countMatches(String message, List<String> expectedWords) {
+        int cntr = 0;
+        for(String expectedWord : expectedWords) {
+            if(message.contains(expectedWord))  {
+                cntr++;
+            }
+        }
+
+        return cntr;
+    }
+
 
     /**
      * This test case demonstrates the process of breaking the vigenere cipher with key len 1.

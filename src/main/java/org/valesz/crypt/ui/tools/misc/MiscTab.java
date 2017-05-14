@@ -25,6 +25,7 @@ public class MiscTab {
     private JPanel mainPanel;
     private JButton loadInputBtn;
     private JButton saveOutputBtn;
+    private JRadioButton columnTransRadioButton;
 
     private AppController controller;
 
@@ -106,6 +107,8 @@ public class MiscTab {
             return EncryptionMethodType.Caesar;
         } else if(vigenereRadioButton.isSelected()) {
             return EncryptionMethodType.Vigenere;
+        } else if(columnTransRadioButton.isSelected()) {
+            return EncryptionMethodType.ColumnTrans;
         } else {
             return EncryptionMethodType.Atbas;
         }

@@ -4,6 +4,10 @@ import org.junit.Test;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -13,6 +17,27 @@ import static org.junit.Assert.assertNotNull;
  * Created by Zdenek Vales on 17.3.2017.
  */
 public class CryptorTest {
+
+    @Test
+    public void testGuessColumnTransKey() {
+        String openText = "zeptaslisebudespetminutvypadatjakoblbecnezeptaslisebudesblbcempocelyzivot";
+        String key = "asdfa";
+        String encText = Cryptor.columnTrans(openText, key);
+
+        List<String> expectedWords = Arrays.asList(
+                "zeptasli",
+                "budes",
+                "pet",
+                "minut",
+                "vypadat",
+                "jako",
+                "blbec",
+                "nezeptas"
+        );
+        String possiblekey = Cryptor.guessColumntransKey(encText, key.length(), expectedWords).key;
+        String newEncText = Cryptor.columnTrans(openText, possiblekey);
+        assertEquals("Wrong key: "+possiblekey+"!", encText, newEncText);
+    }
 
     @Test
     public void testVigenere() {

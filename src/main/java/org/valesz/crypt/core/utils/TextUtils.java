@@ -3,12 +3,66 @@ package org.valesz.crypt.core.utils;
 import org.valesz.crypt.core.Cryptor;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * This class will contain some cools utils for strings.
  *
  * Created by Zdenek Vales on 19.3.2017.
  */
 public class TextUtils {
+
+    /**
+     * Count how many words from expectedWords list is contained in the message.
+     * @param message
+     * @param expectedWords
+     * @return
+     */
+    public static int countMatches(String message, List<String> expectedWords) {
+        int cntr = 0;
+        for(String expectedWord : expectedWords) {
+            if(message.contains(expectedWord))  {
+                cntr++;
+            }
+        }
+
+        return cntr;
+    }
+
+    /**
+     * Recursively increments the string of given length so that aaa becomes aab, aab becomes aac, aaz becomes aba....
+     * @param string Array of chars to be incremented.
+     * @param len Length of the string.
+     */
+    public static void incString(char[] string, int len) {
+        string[len -1] = (char)(string[len-1]+1);
+        if(string[len-1] == ('z'+1)) {
+            string[len-1] = 'a';
+            if(len-1 == 0) {
+                return;
+            }
+            incString(string, len-1);
+        }
+    }
+
+    /**
+     * Returns all possible permutations of english lowercase alphabet of given length.
+     * @param len Length of the strings.
+     * @return List containing possible permutations. It's size will be 26! / (26-len)!.
+     */
+    // todo: permutations algorithm
+    public static List<String> allPossiblePermutations(int len) {
+        Set<Character> alphabet = new HashSet<>();
+        for(char c = 'a'; c <= 'z'; c++) {
+            alphabet.add(c);
+        }
+
+
+        return new ArrayList<>();
+    }
 
     /**
      * Strips all non-letter characters from text and converts upper case characters to lowercase
