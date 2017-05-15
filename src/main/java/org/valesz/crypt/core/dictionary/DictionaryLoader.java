@@ -3,6 +3,7 @@ package org.valesz.crypt.core.dictionary;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 import org.valesz.crypt.core.utils.FileUtils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,11 +28,11 @@ public class DictionaryLoader {
      * Loads a dictionary from csv file. The first line of file should contain only the language code.
      * Every line after the first one should contain two, comma separated values: letter,relative count convertible to Double.
      *
-     * @param fileName Name of the source file. If the file has less than MIN_LINES, exception is thrown.
+     * @param file Source file. If the file has less than MIN_LINES, exception is thrown.
      * @return Loaded dictionary.
      */
-    public static IDictionary loadDictionaryFromFile(String fileName) throws FileNotFoundException, IOException, NotADictionaryFileException {
-        List<String> lines = FileUtils.readLinesFromFile(fileName);
+    public static IDictionary loadDictionaryFromFile(File file) throws IOException, NotADictionaryFileException {
+        List<String> lines = FileUtils.readLinesFromFile(file);
         if(lines.size() < MIN_LINES) {
             throw new NotADictionaryFileException("The file doesn't contain enough data to load a dictionary.");
         }
@@ -63,5 +64,16 @@ public class DictionaryLoader {
         }
 
         return new Dictionary(languageCode, letterFrequencies);
+    }
+
+    /**
+     * Loads a dictionary from csv file. The first line of file should contain only the language code.
+     * Every line after the first one should contain two, comma separated values: letter,relative count convertible to Double.
+     *
+     * @param fileName Name of the source file. If the file has less than MIN_LINES, exception is thrown.
+     * @return Loaded dictionary.
+     */
+    public static IDictionary loadDictionaryFromFile(String fileName) throws FileNotFoundException, IOException, NotADictionaryFileException {
+        return DictionaryLoader.loadDictionaryFromFile(new File(fileName));
     }
 }

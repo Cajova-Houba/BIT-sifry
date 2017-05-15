@@ -9,6 +9,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 /**
  * Created by valesz on 25.04.2017.
@@ -31,12 +32,13 @@ public class DictionaryTab {
 
     private AppController controller;
 
+    private File dictFile;
+
     public DictionaryTab() {
         loadDictionaryBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String filePath = dictFilePath.getText();
-                controller.addDictionary(filePath);
+                controller.addDictionary();
             }
         });
         selectDictFileBtn.addActionListener(new ActionListener() {
@@ -47,10 +49,26 @@ public class DictionaryTab {
                 int retVal = fileChooser.showOpenDialog(getMainPanel());
 
                 if(retVal == JFileChooser.APPROVE_OPTION) {
-                    dictFilePath.setText(fileChooser.getSelectedFile().getAbsolutePath());
+                    dictFile = fileChooser.getSelectedFile();
+                    dictFilePath.setText(dictFile.getName());
+                } else {
+                    dictFile = null;
+                    dictFilePath.setText("");
                 }
             }
         });
+        removeDictionaryBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(selectedDictionary != null) {
+                    controller.removeDictionary();
+                }
+            }
+        });
+    }
+
+    public IDictionary getSelectedDictionary() {
+        return selectedDictionary;
     }
 
     public JPanel getMainPanel() {
@@ -100,5 +118,9 @@ public class DictionaryTab {
                 }
             }
         });
+    }
+
+    public File getDictFile() {
+        return dictFile;
     }
 }

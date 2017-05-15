@@ -108,4 +108,8 @@ public class VigenereTab {
         keyLenTo = new JSpinner(new SpinnerNumberModel(2,2,20,1));
         keyLenSpinner = new JSpinner(new SpinnerNumberModel(1,1,20,1));
     }
+
+    public void updateDictionarySelect() {
+        dictionarySelect.setModel(new DefaultComboBoxModel<IDictionary>(DictionaryService.getInstance().getAll().toArray(new IDictionary[0])));
+    }
 }

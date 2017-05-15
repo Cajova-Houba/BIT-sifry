@@ -68,4 +68,8 @@ public class FrequencyAnalysisTableModel extends AbstractTableModel {
                 return null;
         }
     }
+
+    public FrequencyAnalysisResult[] getData() {
+        return data;
+    }
 }

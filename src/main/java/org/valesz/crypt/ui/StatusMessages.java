@@ -60,4 +60,12 @@ public class StatusMessages {
     public static final String NO_KEY_FOUND = "Klíč nenalezen.";
 
     public static final String ACTION_STOPPED = "Akce přerušena.";
+
+    public static final String NO_EXP_WORDS_FILE = "Není soubor s očekávanými slovy.";
+
+    public static final String NO_DICT_TO_DELETE = "Žádkný slovník ke smazání.";
+
+    public static final String LAST_DICT = "Nelze odstranit poslední slovník.";
+
+    public static final String NO_DICT_FILE = "Není zadán soubor se slovníkem.";
 }

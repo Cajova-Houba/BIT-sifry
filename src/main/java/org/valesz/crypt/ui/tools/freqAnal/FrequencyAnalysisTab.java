@@ -4,6 +4,9 @@ import org.valesz.crypt.controller.AppController;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,8 +33,25 @@ public class FrequencyAnalysisTab {
 
     private AppController controller;
 
+    private File csvFile;
+
     public FrequencyAnalysisTab() {
         freqAnalBtn.addActionListener(e -> controller.performFrequencyAnalysis());
+        saveToFileBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+
+                int retVal = fileChooser.showOpenDialog(getMainPanel());
+
+                if(retVal == JFileChooser.APPROVE_OPTION) {
+                    csvFile = fileChooser.getSelectedFile();
+                    controller.saveFrequencyAnalysis();
+                } else {
+                    csvFile = null;
+                }
+            }
+        });
     }
 
     public JPanel getMainPanel() {
@@ -65,6 +85,22 @@ public class FrequencyAnalysisTab {
     public void setTriegamFreqAnal(List<FrequencyAnalysisResult> data) {
         ((FrequencyAnalysisTable)trigramFreqTable).fillTable(data);
         setTrigramCount(Integer.toString(data.size()));
+    }
+
+    public FrequencyAnalysisResult[] getLetterData() {
+        return ((FrequencyAnalysisTableModel)letterFreqTable.getModel()).getData();
+    }
+
+    public FrequencyAnalysisResult[] getDigramData() {
+        return ((FrequencyAnalysisTableModel)digramFreqTable.getModel()).getData();
+    }
+
+    public FrequencyAnalysisResult[] getTrigramData() {
+        return ((FrequencyAnalysisTableModel)trigramFreqTable.getModel()).getData();
+    }
+
+    public File getCsvFile() {
+        return csvFile;
     }
 
     public void setLanguage(String language) {

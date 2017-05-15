@@ -4,10 +4,7 @@ import org.valesz.crypt.core.Cryptor;
 import org.valesz.crypt.core.EncryptionMethodType;
 import org.valesz.crypt.core.columnTrans.ColumnTransGuessKeyResult;
 import org.valesz.crypt.core.columnTrans.ColumnTransKeyGuessThread;
-import org.valesz.crypt.core.dictionary.DictionaryLoader;
-import org.valesz.crypt.core.dictionary.DictionaryService;
-import org.valesz.crypt.core.dictionary.IDictionary;
-import org.valesz.crypt.core.dictionary.NotADictionaryFileException;
+import org.valesz.crypt.core.dictionary.*;
 import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
@@ -71,6 +68,77 @@ public class AppController {
 
     }
 
+    public void setMiscTab(MiscTab miscTab) {
+        this.miscTab = miscTab;
+    }
+
+    public void setFrequencyAnalysisTab(FrequencyAnalysisTab frequencyAnalysisTab) {
+        this.frequencyAnalysisTab = frequencyAnalysisTab;
+    }
+
+    public void setDictionaryTab(DictionaryTab dictionaryTab) {
+        this.dictionaryTab = dictionaryTab;
+    }
+
+    public void setInputPanel(InputPanel inputPanel) {
+        this.inputPanel = inputPanel;
+    }
+
+    public void setMainWindow(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
+    }
+
+    public void setVigenereTab(VigenereTab vigenereTab) {
+        this.vigenereTab = vigenereTab;
+    }
+
+    public void setColumnTransTab(ColumnTransTab columnTransTab) {
+        this.columnTransTab = columnTransTab;
+    }
+
+    /**
+     * Saves the results of frequency analysis taken from frequency analysis tab to a csv file.
+     */
+    public void saveFrequencyAnalysis() {
+        File file = frequencyAnalysisTab.getCsvFile();
+        FrequencyAnalysisResult[] letters = frequencyAnalysisTab.getLetterData();
+        FrequencyAnalysisResult[] digrams = frequencyAnalysisTab.getDigramData();
+        FrequencyAnalysisResult[] trigrams = frequencyAnalysisTab.getTrigramData();
+
+        if(file == null) {
+            displayStatus(StatusMessages.NO_OUTPUT_FILE);
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        if(letters != null) {
+            for(FrequencyAnalysisResult fr : letters) {
+                sb.append(fr.getCharacter()+";"+fr.getAbsoluteCount()+";"+String.format("%.8f",fr.getRelativeCount())+"\n");
+            }
+        }
+        if(digrams != null) {
+            for(FrequencyAnalysisResult fr : digrams) {
+                sb.append(fr.getCharacter()+";"+fr.getAbsoluteCount()+";"+String.format("%.8f",fr.getRelativeCount())+"\n");
+            }
+        }
+        if(trigrams != null) {
+            for(FrequencyAnalysisResult fr : trigrams) {
+                sb.append(fr.getCharacter()+";"+fr.getAbsoluteCount()+";"+String.format("%.8f",fr.getRelativeCount())+"\n");
+            }
+        }
+
+        try {
+            FileUtils.writeToFile(file, sb.toString());
+            displayDefaultStatus();
+        } catch (IOException e) {
+            displayStatus(String.format(StatusMessages.Formated.ERROR_WRITING_TO_FILE, file.getName()));
+            return;
+        }
+    }
+
+    /**
+     * Saves the ouput text from the misc tab to file.
+     */
     public void saveOutput() {
         File outputFile = miscTab.getOutputFile();
         String outText = miscTab.getOutputText();
@@ -90,6 +158,9 @@ public class AppController {
         displayStatus(String.format(StatusMessages.Formated.SAVED_TO_FILE, outputFile.getName()));
     }
 
+    /**
+     * Loads the input from file.
+     */
     public void loadInput() {
         File inputFile = miscTab.getInputFile();
         if(inputFile == null) {
@@ -120,6 +191,10 @@ public class AppController {
         displayDefaultStatus();
     }
 
+    /**
+     * Decrypts the text using the method and key from misc tab. Decrypted text will then be displayed to
+     * output panel in misc tab.
+     */
     public void decrypt() {
         EncryptionMethodType type = miscTab.getSelectedMethodType();
         String key = miscTab.getKey();
@@ -165,6 +240,10 @@ public class AppController {
         displayDefaultStatus();
     }
 
+    /**
+     * Encrypts the text using the method and key from misc tab. Encrypted text will then be displayed to
+     * output panel in misc tab.
+     */
     public void encrypt() {
         EncryptionMethodType type = miscTab.getSelectedMethodType();
         String key = miscTab.getKey();
@@ -210,30 +289,10 @@ public class AppController {
         displayDefaultStatus();
     }
 
-    public void setMiscTab(MiscTab miscTab) {
-        this.miscTab = miscTab;
-    }
-
-    public void setFrequencyAnalysisTab(FrequencyAnalysisTab frequencyAnalysisTab) {
-        this.frequencyAnalysisTab = frequencyAnalysisTab;
-    }
-
-    public void setDictionaryTab(DictionaryTab dictionaryTab) {
-        this.dictionaryTab = dictionaryTab;
-    }
-
-    public void setInputPanel(InputPanel inputPanel) {
-        this.inputPanel = inputPanel;
-    }
-
-    public void setMainWindow(MainWindow mainWindow) {
-        this.mainWindow = mainWindow;
-    }
-
-    public void setVigenereTab(VigenereTab vigenereTab) {
-        this.vigenereTab = vigenereTab;
-    }
-
+    /**
+     * Guess key for vigenere cipher using key length and dictionary obtained from vigenere tab.
+     * Key and decrypted text will be displayed in output panel in vigenere tab.
+     */
     public void guessVigenereKey() {
         String encryptedText = inputPanel.getInputText();
         int keyLen = vigenereTab.getKeyLength();
@@ -261,6 +320,9 @@ public class AppController {
         displayDefaultStatus();
     }
 
+    /**
+     * Performs vigenere analysis over text from input panel and displays histogram(s) to vigenere tab.
+     */
     public void performVigenereAnalysis() {
         String encryptedText = inputPanel.getInputText();
         int keyLenMin = vigenereTab.getMinKeyLen();
@@ -290,6 +352,10 @@ public class AppController {
         displayDefaultStatus();
     }
 
+    /**
+     * Performs frequency analysis over text from input panel and displays results to tables in
+     * frequency analysis tab.
+     */
     public void performFrequencyAnalysis() {
         String encryptedText = inputPanel.getInputText();
         int period = frequencyAnalysisTab.getPeriod();
@@ -328,25 +394,32 @@ public class AppController {
         displayDefaultStatus();
     }
 
+    /**
+     * Displays a status.
+     * @param status
+     */
     public void displayStatus(String status) {
         mainWindow.displayStatusMessage(status);
     }
 
-    public void addDictionary(String filePath) {
+    /**
+     * Adds a dictionary from file choose in dictionary tab to dictionary system.
+     * Updates both dictionary view in dictionary tab and dictionary select in vigenere tab.
+     */
+    public void addDictionary() {
 
-        if(filePath.isEmpty()) {
-            displayStatus(StatusMessages.NO_FILE_PATH);
+        File dictFile = dictionaryTab.getDictFile();
+        if(dictFile == null) {
+            displayStatus(StatusMessages.NO_DICT_FILE);
             return;
         }
-
-        File dictFile = new File(filePath);
         if(!dictFile.exists()) {
             displayStatus(StatusMessages.FILE_NOT_FOUND);
             return;
         }
 
         try {
-            IDictionary dictionary = DictionaryLoader.loadDictionaryFromFile(filePath);
+            IDictionary dictionary = DictionaryLoader.loadDictionaryFromFile(dictFile);
             DictionaryService.getInstance().addDictionary(dictionary);
             displayStatus(String.format(StatusMessages.Formated.DICTIONARY_LOADED, dictionary.getLanguageCode()));
         } catch (IOException e) {
@@ -360,9 +433,35 @@ public class AppController {
         }
 
         dictionaryTab.updateDictionaryList();
+        vigenereTab.updateDictionarySelect();
         displayDefaultStatus();
     }
 
+    /**
+     * Removes dictionary selected in dictionary tab from the system.
+     * Updates both dictionary view in dictionary tab and dictionary select in vigenere tab.
+     */
+    public void removeDictionary() {
+        IDictionary dict = dictionaryTab.getSelectedDictionary();
+        if(dict == null) {
+            displayStatus(StatusMessages.NO_DICT_TO_DELETE);
+            return;
+        }
+
+        if(DictionaryService.getInstance().getAll().size() == 1) {
+            displayStatus(StatusMessages.LAST_DICT);
+            return;
+        }
+
+        DictionaryService.getInstance().removeDictionary(dict);
+        dictionaryTab.updateDictionaryList();
+        vigenereTab.updateDictionarySelect();
+        displayDefaultStatus();
+    }
+
+    /**
+     * Stops the current process of breaking the column trans cipher.
+     */
     public void stopColumnTransGuessing() {
         if(task != null && !task.isDone() && !task.isCancelled()) {
             task.cancel(true);
@@ -375,10 +474,14 @@ public class AppController {
         columnTransTab.disableKeySearchStop();
     }
 
+    /**
+     * Starts the process of guessing the key for column cipher taken from input panel.
+     * Parameters for this process are taken from column transposition tab.
+     * Results (key + decrypted text) are also displayed in the column transposition tab.
+     */
     public void guessColumnTransKey() {
         // load inputs
         String encText = inputPanel.getInputText();
-        int threadCount = columnTransTab.getThreadCount();
         int minKeyLen = columnTransTab.getMinKeyLength();
         int maxKeyLen = columnTransTab.getMaxKeyLength();
         File expWordsFile = columnTransTab.getExpectedWordsFile();
@@ -392,6 +495,16 @@ public class AppController {
                 "blbec",
                 "nezeptas"
         );
+
+        // check inputs
+        if(expWordsFile == null ) {
+            displayStatus(StatusMessages.NO_EXP_WORDS_FILE);
+            return;
+        }
+        if(!expWordsFile.exists()) {
+            displayStatus(String.format(StatusMessages.Formated.FILE_NOT_FOUND, expWordsFile.getAbsolutePath()));
+            return;
+        }
         try {
             tmp = FileUtils.readLinesFromFile(expWordsFile);
         } catch (IOException e) {
@@ -399,14 +512,8 @@ public class AppController {
             return;
         }
         final List<String> expectedWords = new ArrayList<>(tmp);
-
-        // check inputs
         if(encText.isEmpty()) {
             displayStatus(StatusMessages.NO_INPUT_TEXT);
-            return;
-        }
-        if(threadCount < 1) {
-            displayStatus(StatusMessages.WRONG_THREAD_COUNT);
             return;
         }
         if(minKeyLen < 1 || maxKeyLen < 1 || minKeyLen > maxKeyLen) {
@@ -426,6 +533,10 @@ public class AppController {
         // swing worker for progress updater
         task = new SwingWorker<Void, Void>() {
 
+            /**
+             * If the worker is cancelled, force-stop all threads.
+             * @param threads
+             */
             private void clean(ColumnTransKeyGuessThread[] threads) {
                 for (int i = 0; i < threads.length; i++) {
                     if(threads[i] != null) {
@@ -500,11 +611,10 @@ public class AppController {
         displayStatus(StatusMessages.PROCESS_RUNNING);
     }
 
+    /**
+     * Displays the default status.
+     */
     private void displayDefaultStatus() {
         displayStatus(StatusMessages.DEFAULT);
-    }
-
-    public void setColumnTransTab(ColumnTransTab columnTransTab) {
-        this.columnTransTab = columnTransTab;
     }
 }

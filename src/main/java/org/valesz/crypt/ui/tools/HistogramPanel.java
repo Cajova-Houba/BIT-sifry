@@ -59,7 +59,7 @@ public class HistogramPanel extends JPanel {
             int colHeight = normalizedData[valCntr];
             double value = data[valCntr];
             int xData = xVals[valCntr];
-            fillRectangle((int)columnWidth*(2*i+1),300-colHeight,(int)columnWidth,colHeight , graphics2D, value, xData);
+            fillRectangle((int)columnWidth*(2*i+1),getHeight()-colHeight,(int)columnWidth,colHeight , graphics2D, value, xData);
             valCntr++;
         }
     }

@@ -122,5 +122,13 @@ public class DictionaryService {
         return dictionary;
     }
 
+    /**
+     * Removes the dictionary from the system if the dictionary exists in the system.
+     * @param dictionary
+     */
+    public void removeDictionary(IDictionary dictionary) {
+        loadedDictionaries.remove(dictionary.getLanguageCode());
+    }
+
 
 }
