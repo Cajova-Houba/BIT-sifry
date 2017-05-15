@@ -16,6 +16,42 @@ import java.util.Set;
 public class TextUtils {
 
     /**
+     * Table for converting czech diacritic chards to standard alphabet.
+     */
+    public static final char[][] diacriticConversion = new char[][] {
+            new char[] {'Á','a'},
+            new char[] {'á','a'},
+            new char[] {'Č','c'},
+            new char[] {'č','c'},
+            new char[] {'Ď','d'},
+            new char[] {'ď','d'},
+            new char[] {'É','e'},
+            new char[] {'é','e'},
+            new char[] {'Ě','e'},
+            new char[] {'ě','e'},
+            new char[] {'Í','i'},
+            new char[] {'í','i'},
+            new char[] {'Ň','n'},
+            new char[] {'ň','n'},
+            new char[] {'Ó','o'},
+            new char[] {'ó','o'},
+            new char[] {'Š','s'},
+            new char[] {'š','s'},
+            new char[] {'Ř','r'},
+            new char[] {'ř','r'},
+            new char[] {'Ť','t'},
+            new char[] {'ť','t'},
+            new char[] {'Ú','u'},
+            new char[] {'ú','u'},
+            new char[] {'Ů','u'},
+            new char[] {'ů','u'},
+            new char[] {'Ý','y'},
+            new char[] {'ý','y'},
+            new char[] {'Ž','z'},
+            new char[] {'ž','z'}
+    };
+
+    /**
      * Count how many words from expectedWords list is contained in the message.
      * @param message
      * @param expectedWords
@@ -77,6 +113,13 @@ public class TextUtils {
                 sb.append(c);
             } else if (c >= 'A' && c <='Z') {
                 sb.append(Character.toLowerCase(c));
+            } else {
+                for (int i = 0; i < diacriticConversion.length; i++) {
+                    if(diacriticConversion[i][0] == c) {
+                        sb.append(diacriticConversion[i][1]);
+                        break;
+                    }
+                }
             }
         }
 

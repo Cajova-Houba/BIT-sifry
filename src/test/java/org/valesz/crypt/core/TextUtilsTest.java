@@ -12,6 +12,14 @@ import static org.junit.Assert.assertEquals;
 public class TextUtilsTest {
 
     @Test
+    public void testStripText() {
+        String origText = "příliš žluťoučký kůň úpěl ďábelské ódy;PŘÍLIŠ ŽLUŤOUČKÝ KŮŇ ÚPĚL ĎÁBELSKÉ ÓDY";
+        String expectedText = "priliszlutouckykunupeldabelskeodypriliszlutouckykunupeldabelskeody";
+
+        assertEquals("Wrong stripped text!", expectedText, TextUtils.stripText(origText));
+    }
+
+    @Test
     public void testGetComplexViewText1() {
         String encryptedMessage = "abcdef,a";
         String[] alphabet = new String[Cryptor.ALPHABET_LEN];

@@ -12,7 +12,7 @@ public class ColumnTransMethod implements EncryptionMethod<ColumnTransInput, Col
 
     public ColumnTransOutput encrypt(ColumnTransInput cipherInput) {
         String key = cipherInput.getKey();
-        String message = TextUtils.stripText(cipherInput.getText());
+        String message = cipherInput.getText();
         int keyLen = key.length();
         int msgLen = message.length();
         int[] keyNumbers = new int[keyLen];

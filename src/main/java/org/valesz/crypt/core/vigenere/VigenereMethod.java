@@ -1,6 +1,7 @@
 package org.valesz.crypt.core.vigenere;
 
 import org.valesz.crypt.core.EncryptionMethod;
+import org.valesz.crypt.core.utils.TextUtils;
 
 import static org.valesz.crypt.core.Cryptor.ALPHABET_LEN;
 import static org.valesz.crypt.core.Cryptor.FIRST_LETTER;

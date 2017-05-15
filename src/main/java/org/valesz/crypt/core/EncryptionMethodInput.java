@@ -8,7 +8,7 @@ package org.valesz.crypt.core;
 public interface EncryptionMethodInput {
 
     /**
-     * Returns the text of this input object.
+     * Returns the text of this input object. This is expected to be already stripped.
      *
      * @return A string.
      */

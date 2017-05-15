@@ -23,10 +23,12 @@ import org.valesz.crypt.ui.tools.misc.MiscTab;
 import org.valesz.crypt.ui.tools.vigenere.VigenereTab;
 
 import javax.swing.*;
+import javax.xml.soap.Text;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,9 @@ import java.util.logging.Logger;
 
 /**
  * Controller for connection between UI and core.
+ * Every method called by UI component is without parameters and returns void.
+ * Each input from UI component is obtained by getter.
+ * Each ouput to be displayed on UI component is set by setter.
  *
  * Created by Zdenek Vales on 23.4.2017.
  */
@@ -55,6 +60,12 @@ public class AppController {
     private VigenereTab vigenereTab;
     private MiscTab miscTab;
     private ColumnTransTab columnTransTab;
+
+
+    /**
+     * A task for running parallel operations.
+     */
+    private SwingWorker<Void, Void> task;
 
     private AppController() {
 
@@ -112,7 +123,7 @@ public class AppController {
     public void decrypt() {
         EncryptionMethodType type = miscTab.getSelectedMethodType();
         String key = miscTab.getKey();
-        String inputText = inputPanel.getInputText();
+        String inputText = TextUtils.stripText(inputPanel.getInputText());
         String outputText = "";
 
         if(inputText.isEmpty()) {
@@ -157,7 +168,7 @@ public class AppController {
     public void encrypt() {
         EncryptionMethodType type = miscTab.getSelectedMethodType();
         String key = miscTab.getKey();
-        String inputText = inputPanel.getInputText();
+        String inputText = TextUtils.stripText(inputPanel.getInputText());
         String outputText = "";
 
         if(inputText.isEmpty()) {
@@ -352,13 +363,26 @@ public class AppController {
         displayDefaultStatus();
     }
 
+    public void stopColumnTransGuessing() {
+        if(task != null && !task.isDone() && !task.isCancelled()) {
+            task.cancel(true);
+            displayStatus(StatusMessages.ACTION_STOPPED);
+        } else {
+            displayDefaultStatus();
+        }
+
+        columnTransTab.enableKeySearch();
+        columnTransTab.disableKeySearchStop();
+    }
+
     public void guessColumnTransKey() {
         // load inputs
         String encText = inputPanel.getInputText();
         int threadCount = columnTransTab.getThreadCount();
         int minKeyLen = columnTransTab.getMinKeyLength();
         int maxKeyLen = columnTransTab.getMaxKeyLength();
-        List<String> expectedWords = Arrays.asList(
+        File expWordsFile = columnTransTab.getExpectedWordsFile();
+        List<String> tmp = Arrays.asList(
                 "zeptasli",
                 "budes",
                 "pet",
@@ -368,6 +392,13 @@ public class AppController {
                 "blbec",
                 "nezeptas"
         );
+        try {
+            tmp = FileUtils.readLinesFromFile(expWordsFile);
+        } catch (IOException e) {
+            displayStatus(String.format(StatusMessages.Formated.ERROR_READING_FILE,expWordsFile.getName()));
+            return;
+        }
+        final List<String> expectedWords = new ArrayList<>(tmp);
 
         // check inputs
         if(encText.isEmpty()) {
@@ -389,10 +420,25 @@ public class AppController {
 
         // compute stuff
         columnTransTab.disableKeySearch();
+        columnTransTab.enableKeySearchStop();
         columnTransTab.setProgress(0);
 
         // swing worker for progress updater
-        SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
+        task = new SwingWorker<Void, Void>() {
+
+            private void clean(ColumnTransKeyGuessThread[] threads) {
+                for (int i = 0; i < threads.length; i++) {
+                    if(threads[i] != null) {
+                        try {
+                            threads[i].stop();
+                        } catch (Exception e) {
+                            logger.severe("Error while interrupting thread "+i+": "+e.getMessage());
+                        }
+                    }
+                }
+                setProgress(0);
+            }
+
             @Override
             protected Void doInBackground() throws Exception {
                 ColumnTransKeyGuessThread[] threads = new ColumnTransKeyGuessThread[maxKeyLen - minKeyLen + 1];
@@ -405,6 +451,11 @@ public class AppController {
 
                 for (int i = 0; i < threads.length; i++) {
                     try {
+                        if(isCancelled()) {
+                            logger.info("Task cancelled");
+                            clean(threads);
+                            return null;
+                        }
                         threads[i].join();
                         ColumnTransGuessKeyResult r = threads[i].getRes();
                         if (r.matches > maxMatch) {
@@ -427,6 +478,7 @@ public class AppController {
                     displayDefaultStatus();
                 }
                 columnTransTab.enableKeySearch();
+                columnTransTab.disableKeySearchStop();
                 return null;
             }
         };

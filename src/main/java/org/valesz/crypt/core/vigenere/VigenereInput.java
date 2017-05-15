@@ -21,6 +21,10 @@ public class VigenereInput implements EncryptionMethodInput {
         return openText;
     }
 
+    /**
+     * This is expected to be already stripped.
+     * @return
+     */
     public String getKey() {
         return key;
     }

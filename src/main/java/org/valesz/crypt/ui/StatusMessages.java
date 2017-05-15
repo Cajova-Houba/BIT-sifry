@@ -58,4 +58,6 @@ public class StatusMessages {
     public static final String THREAD_ERROR = "Chyba při čekání na vlákno.";
 
     public static final String NO_KEY_FOUND = "Klíč nenalezen.";
+
+    public static final String ACTION_STOPPED = "Akce přerušena.";
 }

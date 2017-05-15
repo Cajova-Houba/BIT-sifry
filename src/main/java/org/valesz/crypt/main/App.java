@@ -63,11 +63,10 @@ public class App
         // TODO: make sure the default dictionary is loaded properly
 //        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("C:/users/valesz/tmp/cz.dict"));
 //        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("C:/users/valesz/tmp/en.dict"));
-//        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/cz.dict"));
-//        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/en.dict"));
-
-        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("/home/zdenda/tmp/cryptor/cz.dict"));
-        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("/home/zdenda/tmp/cryptor/en.dict"));
+        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/cz.dict"));
+        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/en.dict"));
+//        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("/home/zdenda/tmp/cryptor/cz.dict"));
+//        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("/home/zdenda/tmp/cryptor/en.dict"));
 
         if(args.length > 0) {
             // use cli

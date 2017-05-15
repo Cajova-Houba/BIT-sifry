@@ -5,6 +5,7 @@ import org.valesz.crypt.controller.AppController;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 /**
  * @author Zdenek Vales
@@ -15,7 +16,7 @@ public class ColumnTransTab {
 
     private JPanel mainPanel;
     private JSpinner threadCountSpinner;
-    private JPanel keyInfoPanel;
+    private JPanel parametersPanel;
     private JSpinner minKeyLength;
     private JSpinner maxKeyLength;
     private JTextPane algoritmusZkoušíVšechnyMožnéTextPane;
@@ -23,12 +24,36 @@ public class ColumnTransTab {
     private JTextField foundKey;
     private JTextArea decText;
     private JButton guessKeyBtn;
+    private JTextField expectedWordsFileName;
+    private JButton loadExpectedWordsBtn;
+    private JButton stopBtn;
+
+    private File expectedWordsFile;
 
     public ColumnTransTab() {
         guessKeyBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.guessColumnTransKey();
+            }
+        });
+        loadExpectedWordsBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+
+                int retVal = fileChooser.showOpenDialog(getMainPanel());
+
+                if(retVal == JFileChooser.APPROVE_OPTION) {
+                    expectedWordsFile = fileChooser.getSelectedFile();
+                    expectedWordsFileName.setText(expectedWordsFile.getName());
+                }
+            }
+        });
+        stopBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.stopColumnTransGuessing();
             }
         });
     }
@@ -44,8 +69,8 @@ public class ColumnTransTab {
 
     private void createUIComponents() {
         threadCountSpinner = new JSpinner(new SpinnerNumberModel(1,1,10,1));
-        minKeyLength = new JSpinner(new SpinnerNumberModel(1,1,9,1));
-        maxKeyLength = new JSpinner(new SpinnerNumberModel(2,2,10,1));
+        minKeyLength = new JSpinner(new SpinnerNumberModel(1,1,19,1));
+        maxKeyLength = new JSpinner(new SpinnerNumberModel(2,2,20,1));
 
     }
 
@@ -79,5 +104,17 @@ public class ColumnTransTab {
 
     public void enableKeySearch() {
         guessKeyBtn.setEnabled(true);
+    }
+
+    public File getExpectedWordsFile() {
+        return expectedWordsFile;
+    }
+
+    public void disableKeySearchStop() {
+        stopBtn.setEnabled(false);
+    }
+
+    public void enableKeySearchStop() {
+        stopBtn.setEnabled(true);
     }
 }
