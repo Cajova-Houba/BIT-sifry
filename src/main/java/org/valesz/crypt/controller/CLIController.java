@@ -7,8 +7,10 @@ import org.valesz.crypt.core.freqanal.FrequencyAnalyser;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisMethod;
 import org.valesz.crypt.core.freqanal.FrequencyAnalysisResult;
 import org.valesz.crypt.core.utils.FileUtils;
+import org.valesz.crypt.core.utils.TextUtils;
 import org.valesz.crypt.main.App;
 
+import javax.xml.soap.Text;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
@@ -102,7 +104,7 @@ public class CLIController {
     public int encrypt(EncryptionMethod method, EncryptionMethodInput input, String outFile, String inFile) {
         String openText = "";
         try {
-            openText = FileUtils.readFromFile(inFile);
+            openText = TextUtils.stripText(FileUtils.readFromFile(inFile));
         } catch (IOException e) {
             logger.severe("Error while reading input from file "+inFile+". Exception "+e.getClass()+", message: "+e.getMessage());
             System.out.println("Chyba při čtení ze souboru "+inFile);
@@ -134,7 +136,7 @@ public class CLIController {
     public int encryptInFile(EncryptionMethod method, EncryptionMethodInput input, String inFile) {
         String openText = "";
         try {
-            openText = FileUtils.readFromFile(inFile);
+            openText = TextUtils.stripText(FileUtils.readFromFile(inFile));
         } catch (IOException e) {
             logger.severe("Error while reading input from file "+inFile+". Exception "+e.getClass()+", message: "+e.getMessage());
             System.out.println("Chyba při čtení ze souboru "+inFile);
@@ -189,7 +191,7 @@ public class CLIController {
     public int decrypt(EncryptionMethod method, EncryptionMethodInput input, String outFile, String inFile) {
         String openText = "";
         try {
-            openText = FileUtils.readFromFile(inFile);
+            openText = TextUtils.stripText(FileUtils.readFromFile(inFile));
         } catch (IOException e) {
             logger.severe("Error while reading input from file "+outFile+". Exception "+e.getClass()+", message: "+e.getMessage());
             System.out.println("Chyba při čtení ze souboru "+outFile);
@@ -221,7 +223,7 @@ public class CLIController {
     public int decryptInFile(EncryptionMethod method, EncryptionMethodInput input, String inFile) {
         String openText = "";
         try {
-            openText = FileUtils.readFromFile(inFile);
+            openText = TextUtils.stripText(FileUtils.readFromFile(inFile));
         } catch (IOException e) {
             logger.severe("Error while reading input from file "+inFile+". Exception "+e.getClass()+", message: "+e.getMessage());
             System.out.println("Chyba při čtení ze souboru "+inFile);
@@ -238,7 +240,7 @@ public class CLIController {
      * @return
      */
     public int frequencyAnalysis(String inputText) {
-        FrequencyAnalyser fa = new FrequencyAnalyser(inputText);
+        FrequencyAnalyser fa = new FrequencyAnalyser(TextUtils.stripText(inputText));
         List<FrequencyAnalysisResult> letters = fa.analyse(FrequencyAnalysisMethod.Letters, 0,0);
 
         for(FrequencyAnalysisResult res : letters) {
@@ -255,7 +257,7 @@ public class CLIController {
      * @return
      */
     public int frequencyAnalysis(String inputText, String outFile) {
-        FrequencyAnalyser fa = new FrequencyAnalyser(inputText);
+        FrequencyAnalyser fa = new FrequencyAnalyser(TextUtils.stripText(inputText));
         List<FrequencyAnalysisResult> letters = fa.analyse(FrequencyAnalysisMethod.Letters, 0,0);
         StringBuilder sb = new StringBuilder();
 
@@ -283,7 +285,7 @@ public class CLIController {
     public int frequencyAnalysisInFile(String inFile) {
         String inputText = "";
         try {
-            inputText = FileUtils.readFromFile(inFile);
+            inputText =  TextUtils.stripText(FileUtils.readFromFile(inFile));
         } catch (IOException e) {
             logger.severe("Error while reading input from file "+inFile+". Exception "+e.getClass()+", message: "+e.getMessage());
             System.out.println("Chyba při čtení ze souboru "+inFile);
@@ -310,7 +312,7 @@ public class CLIController {
     public int frequencyAnalysisInFileOutFile(String inFile, String outFile) {
         String inputText = "";
         try {
-            inputText = FileUtils.readFromFile(inFile);
+            inputText = TextUtils.stripText(FileUtils.readFromFile(inFile));
         } catch (IOException e) {
             logger.severe("Error while reading input from file "+inFile+". Exception "+e.getClass()+", message: "+e.getMessage());
             System.out.println("Chyba při čtení ze souboru "+inFile);

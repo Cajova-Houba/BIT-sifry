@@ -55,7 +55,9 @@ public class App
 
     private static CLIController cliController = CLIController.getInstance();
 
-
+    private static String getResourcePath(String resName) {
+        return App.class.getResource(resName).getPath();
+    }
 
     public static void main( String[] args ) throws IOException, NotADictionaryFileException {
         logger.info("Starting application.");
@@ -63,17 +65,27 @@ public class App
         // TODO: make sure the default dictionary is loaded properly
 //        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("C:/users/valesz/tmp/cz.dict"));
 //        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("C:/users/valesz/tmp/en.dict"));
-        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/cz.dict"));
-        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/en.dict"));
+//        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/cz.dict"));
+//        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("D:/tmp/cryptor/en.dict"));
 //        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("/home/zdenda/tmp/cryptor/cz.dict"));
 //        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile("/home/zdenda/tmp/cryptor/en.dict"));
+        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/cz.dict")));
+        DictionaryService.getInstance().addDictionary(DictionaryLoader.loadDictionaryFromFile(getResourcePath("/en.dict")));
 
         if(args.length > 0) {
             // use cli
-            int res = handleCli(args);
-            if(res != 0) {
-                System.exit(res);
-            }
+            logger.info("Sorry, CLI is currently not supported.");
+            // display gui
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    showGUI();
+                }
+            });
+//            int res = handleCli(args);
+//            if(res != 0) {
+//                System.exit(res);
+//            }
         } else {
             // display gui
             SwingUtilities.invokeLater(new Runnable() {
@@ -125,6 +137,8 @@ public class App
     }
 
     /**
+     * CURRENTLY NOT SUPPORTED!
+     *
      * Handles command line usage of application.
      * @param args Arguments.
      * @return Used as return value from application.
